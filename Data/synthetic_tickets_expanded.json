@@ -1,0 +1,2942 @@
+[
+  {
+    "ticket_id": "TICK-001",
+    "title": "Users unable to log in after password reset",
+    "description": "Multiple users reporting authentication failures after performing password reset. Error message: 'Invalid credentials'. Issue started after recent security patch deployment.",
+    "resolution": "Found that the password hash algorithm was updated but session tokens weren't invalidated. Solution: Clear all active sessions and force re-authentication. Implemented automatic session cleanup on password change.",
+    "category": "Authentication",
+    "priority": "High",
+    "created_date": "2024-01-15",
+    "resolved_date": "2024-01-15"
+  },
+  {
+    "ticket_id": "TICK-002",
+    "title": "Database connection timeout in production",
+    "description": "Application experiencing intermittent 500 errors. Logs show 'connection pool exhausted' and 'timeout waiting for connection'. Affects approximately 20% of requests during peak hours.",
+    "resolution": "Database connection pool was sized too small for peak load. Increased max_connections from 20 to 100. Added connection pooling monitoring and alerts. Optimized long-running queries that were holding connections.",
+    "category": "Database",
+    "priority": "Critical",
+    "created_date": "2024-01-18",
+    "resolved_date": "2024-01-18"
+  },
+  {
+    "ticket_id": "TICK-003",
+    "title": "Payment processing fails for international cards",
+    "description": "Customers using non-US credit cards receiving 'Payment declined' errors. Payment gateway returns error code 402. Issue only affects cards issued outside United States.",
+    "resolution": "Payment gateway configuration was missing international card processing flag. Updated gateway settings to enable international transactions. Added country-specific currency conversion. Retested with cards from EU, UK, and APAC regions.",
+    "category": "Payment",
+    "priority": "High",
+    "created_date": "2024-01-20",
+    "resolved_date": "2024-01-21"
+  },
+  {
+    "ticket_id": "TICK-004",
+    "title": "Mobile app crashes on iOS 17",
+    "description": "App crashes immediately on launch for users who upgraded to iOS 17. Crash reports show EXC_BAD_ACCESS in networking module. Affects approximately 30% of iOS user base.",
+    "resolution": "iOS 17 deprecated certain networking APIs we were using. Updated URLSession implementation to use new async/await pattern. Removed deprecated NSURLConnection usage. Submitted updated build to App Store with iOS 17 compatibility.",
+    "category": "Mobile",
+    "priority": "Critical",
+    "created_date": "2024-01-22",
+    "resolved_date": "2024-01-23"
+  },
+  {
+    "ticket_id": "TICK-005",
+    "title": "Memory leak in background worker process",
+    "description": "Background job processor showing steady memory increase over time. Process killed by OS after reaching 8GB memory usage. Requires daily restart to maintain functionality.",
+    "resolution": "Memory profiling revealed unclosed database cursors in batch processing loop. Added explicit cursor.close() calls and implemented context managers for all DB operations. Memory usage now stable at 500MB. Set up memory usage monitoring alerts.",
+    "category": "Performance",
+    "priority": "High",
+    "created_date": "2024-01-25",
+    "resolved_date": "2024-01-26"
+  },
+  {
+    "ticket_id": "TICK-006",
+    "title": "Email notifications not being delivered",
+    "description": "Users reporting they're not receiving password reset and confirmation emails. SMTP server logs show successful sends, but emails never arrive in inbox or spam folder.",
+    "resolution": "Email service provider had blacklisted our sending IP due to spam complaints. Implemented SPF, DKIM, and DMARC records. Switched to dedicated IP address with proper warmup process. Added email deliverability monitoring.",
+    "category": "Email",
+    "priority": "High",
+    "created_date": "2024-01-28",
+    "resolved_date": "2024-01-29"
+  },
+  {
+    "ticket_id": "TICK-007",
+    "title": "Search functionality returns no results",
+    "description": "Product search returning empty results for queries that should match. Elasticsearch cluster health showing yellow status. Index size growing abnormally large.",
+    "resolution": "Elasticsearch index had corrupted shards after power outage. Performed cluster health check, deleted corrupted index, and rebuilt from database. Implemented automated daily index health checks and backup strategy.",
+    "category": "Search",
+    "priority": "Critical",
+    "created_date": "2024-02-01",
+    "resolved_date": "2024-02-01"
+  },
+  {
+    "ticket_id": "TICK-008",
+    "title": "File uploads failing for large files",
+    "description": "Users unable to upload files larger than 5MB. Progress bar reaches 100% but then shows 'Upload failed' error. Works fine for smaller files. Browser console shows 413 error.",
+    "resolution": "Nginx was configured with default 1MB request body size limit. Updated nginx.conf to set client_max_body_size to 50MB. Also increased Node.js Express body-parser limit. Added validation to show friendly error for files exceeding 50MB.",
+    "category": "File Upload",
+    "priority": "Medium",
+    "created_date": "2024-02-03",
+    "resolved_date": "2024-02-03"
+  },
+  {
+    "ticket_id": "TICK-009",
+    "title": "API rate limiting too aggressive",
+    "description": "Legitimate users hitting rate limits during normal usage. Current limit is 100 requests per minute. Users getting 429 Too Many Requests errors, especially when using batch operations.",
+    "resolution": "Analyzed API usage patterns and found limit was indeed too restrictive. Increased rate limit to 500 requests per minute for authenticated users. Implemented tiered rate limiting based on account type. Added X-RateLimit headers to API responses.",
+    "category": "API",
+    "priority": "Medium",
+    "created_date": "2024-02-05",
+    "resolved_date": "2024-02-06"
+  },
+  {
+    "ticket_id": "TICK-010",
+    "title": "Dashboard loading extremely slowly",
+    "description": "Admin dashboard takes 30+ seconds to load. Browser DevTools show multiple slow database queries. Page becomes unresponsive during load. Affects all users with admin privileges.",
+    "resolution": "Dashboard was making N+1 queries for user statistics. Implemented query optimization using JOIN statements and added database indexes on frequently queried columns. Introduced Redis caching for aggregate statistics with 5-minute TTL. Load time reduced to under 2 seconds.",
+    "category": "Performance",
+    "priority": "High",
+    "created_date": "2024-02-08",
+    "resolved_date": "2024-02-09"
+  },
+  {
+    "ticket_id": "TICK-011",
+    "title": "SSO authentication broken after upgrade",
+    "description": "Single Sign-On integration with corporate SAML provider failing. Users redirected to SSO portal but then receive 'Invalid SAML response' error when redirected back. Started after v2.5 upgrade.",
+    "resolution": "Upgrade changed default SAML signature algorithm from SHA-1 to SHA-256, but IdP configuration wasn't updated. Coordinated with IT team to update IdP settings. Added configuration option to specify signature algorithm. Tested with multiple SAML providers.",
+    "category": "Authentication",
+    "priority": "Critical",
+    "created_date": "2024-02-10",
+    "resolved_date": "2024-02-11"
+  },
+  {
+    "ticket_id": "TICK-012",
+    "title": "Scheduled reports not generating",
+    "description": "Daily scheduled reports stopped generating three days ago. Cron job shows as running in logs but no PDF files are created. Manual report generation works correctly.",
+    "resolution": "Disk space was full on the reports server (100% usage). Old report files were not being cleaned up. Implemented automated cleanup of reports older than 30 days. Increased disk space and added disk usage monitoring alerts.",
+    "category": "Reporting",
+    "priority": "Medium",
+    "created_date": "2024-02-12",
+    "resolved_date": "2024-02-12"
+  },
+  {
+    "ticket_id": "TICK-013",
+    "title": "Webhook deliveries failing intermittently",
+    "description": "Outgoing webhooks to customer endpoints timing out. Retry logic exhausting all attempts. Some webhooks succeed while others fail for same endpoint. No pattern to failures.",
+    "resolution": "Default timeout was 5 seconds but some customer endpoints were slow. Increased timeout to 30 seconds. Implemented exponential backoff for retries. Added webhook delivery status dashboard for customers to monitor. Persisted failed webhooks to dead letter queue.",
+    "category": "Integration",
+    "priority": "High",
+    "created_date": "2024-02-14",
+    "resolved_date": "2024-02-15"
+  },
+  {
+    "ticket_id": "TICK-014",
+    "title": "Session timeout too short",
+    "description": "Users complaining about being logged out too frequently. Currently set to 15 minutes. Particularly problematic for users filling out long forms, losing unsaved data when session expires.",
+    "resolution": "Extended session timeout to 2 hours for active users. Implemented activity-based session renewal (extends on any user action). Added auto-save functionality for forms with localStorage backup. Implemented 'session about to expire' warning modal.",
+    "category": "Authentication",
+    "priority": "Medium",
+    "created_date": "2024-02-16",
+    "resolved_date": "2024-02-17"
+  },
+  {
+    "ticket_id": "TICK-015",
+    "title": "Export to CSV producing corrupt files",
+    "description": "Data export feature generating CSV files that can't be opened in Excel. File appears to have encoding issues with special characters. Particularly affects records with non-ASCII characters.",
+    "resolution": "Export was using default UTF-8 encoding without BOM, causing Excel to misinterpret character encoding. Changed to UTF-8 with BOM for Excel compatibility. Added proper escaping for special characters in CSV fields. Included character encoding in filename.",
+    "category": "Export",
+    "priority": "Medium",
+    "created_date": "2024-02-18",
+    "resolved_date": "2024-02-19"
+  },
+  {
+    "ticket_id": "TICK-016",
+    "title": "Two-factor authentication codes not working",
+    "description": "Users unable to log in with TOTP codes from authenticator apps. Codes shown as invalid even when entered immediately after generation. Affects random subset of users.",
+    "resolution": "Server time was drifting by 2 minutes due to misconfigured NTP. TOTP codes are time-sensitive and were outside acceptance window. Configured NTP synchronization and verified time accuracy. Added time drift monitoring. Increased TOTP acceptance window to ±1 time step.",
+    "category": "Authentication",
+    "priority": "High",
+    "created_date": "2024-02-20",
+    "resolved_date": "2024-02-20"
+  },
+  {
+    "ticket_id": "TICK-017",
+    "title": "Real-time notifications delayed by several minutes",
+    "description": "WebSocket notifications arriving 3-5 minutes late. Users seeing chat messages and alerts significantly delayed. WebSocket connection appears stable, no disconnections in logs.",
+    "resolution": "Message broker (RabbitMQ) had accumulated a large queue backlog. Consumer was processing messages slower than they were being produced. Increased number of consumer workers from 2 to 10. Optimized message processing logic. Added queue length monitoring.",
+    "category": "Real-time",
+    "priority": "High",
+    "created_date": "2024-02-22",
+    "resolved_date": "2024-02-23"
+  },
+  {
+    "ticket_id": "TICK-018",
+    "title": "API returning inconsistent data",
+    "description": "Same API endpoint returning different results for identical requests within seconds. Appears to be caching issue. GET /api/users/:id sometimes returns stale data.",
+    "resolution": "Load balancer was routing to 3 app servers with separate local caches. Cache invalidation only happening on the server that processed the update. Migrated to centralized Redis cache shared across all servers. Implemented cache invalidation via pub/sub.",
+    "category": "API",
+    "priority": "Critical",
+    "created_date": "2024-02-25",
+    "resolved_date": "2024-02-26"
+  },
+  {
+    "ticket_id": "TICK-019",
+    "title": "Image thumbnails not generating",
+    "description": "Newly uploaded images not showing thumbnails. Background job for thumbnail generation appears to be stuck. Queue shows 5000+ pending jobs. Old thumbnails still display correctly.",
+    "resolution": "ImageMagick process was hanging on certain corrupted image files. Implemented timeout for image processing operations. Added validation to reject corrupted files at upload. Cleared stuck jobs and reprocessed with timeout protection. Added failure logging for investigation.",
+    "category": "Media Processing",
+    "priority": "Medium",
+    "created_date": "2024-02-27",
+    "resolved_date": "2024-02-28"
+  },
+  {
+    "ticket_id": "TICK-020",
+    "title": "Cannot delete user accounts",
+    "description": "Delete account functionality failing with foreign key constraint errors. Database shows referential integrity violations. Affects GDPR compliance for user data deletion requests.",
+    "resolution": "Deletion logic was missing cascading deletes for related records. Implemented proper cleanup order: delete user sessions, then activities, then preferences, then user record. Added soft delete option for audit trail. Created GDPR-compliant data anonymization as alternative to hard delete.",
+    "category": "User Management",
+    "priority": "High",
+    "created_date": "2024-03-01",
+    "resolved_date": "2024-03-02"
+  },
+  {
+    "ticket_id": "TICK-021",
+    "title": "Message ordering issues in event stream",
+    "description": "Account status events processed out of order, leaving some accounts in wrong state.",
+    "resolution": "Events for the same account were spread across partitions due to random partition key. Used account ID as partition key and added event version check to reject stale updates. Runbook updated with diagnosis and remediation steps.",
+    "category": "Messaging",
+    "priority": "High",
+    "created_date": "2024-03-03",
+    "resolved_date": "2024-03-04"
+  },
+  {
+    "ticket_id": "TICK-022",
+    "title": "Account lockouts spiking for legitimate users",
+    "description": "Help desk receiving many calls about locked accounts. Lockout policy triggers after 5 failed attempts. Logs show failed attempts originating from mobile app background sync. Detected by synthetic monitoring.",
+    "resolution": "Mobile app was retrying background sync with an expired cached password after users changed it on web. Updated app to stop retrying on 401 and prompt for re-login. Excluded token-based sync failures from lockout counter. Added regression test to prevent recurrence.",
+    "category": "Authentication",
+    "priority": "High",
+    "created_date": "2024-03-06",
+    "resolved_date": "2024-03-06"
+  },
+  {
+    "ticket_id": "TICK-023",
+    "title": "Role changes not taking effect until re-login",
+    "description": "Admins remove user permissions but user retains access for hours. Detected by synthetic monitoring.",
+    "resolution": "Permissions were embedded in long-lived access tokens. Reduced token lifetime to 15 minutes, added permission version check on sensitive actions, and token revocation on role change. Runbook updated with diagnosis and remediation steps.",
+    "category": "User Management",
+    "priority": "High",
+    "created_date": "2024-03-09",
+    "resolved_date": "2024-03-10"
+  },
+  {
+    "ticket_id": "TICK-024",
+    "title": "Feature flag misconfiguration exposed beta feature",
+    "description": "Unfinished beta feature visible to all customers. Reported by the support team via escalation.",
+    "resolution": "Flag targeting rule was edited and default changed to 'on'. Reverted flag, enabled approval workflow for production flag changes, and added audit log alerts. Postmortem published and action items tracked.",
+    "category": "Configuration",
+    "priority": "High",
+    "created_date": "2024-03-10",
+    "resolved_date": "2024-03-12"
+  },
+  {
+    "ticket_id": "TICK-025",
+    "title": "Third-party API rate limit causing failures",
+    "description": "Address validation failing during checkout with 429 responses from provider. First reported on the community forum.",
+    "resolution": "Every page load validated address even when unchanged. Added caching of validation results, debounced client calls, and implemented exponential backoff with fallback to accept-and-verify-later. Postmortem published and action items tracked.",
+    "category": "Integration",
+    "priority": "High",
+    "created_date": "2024-03-11",
+    "resolved_date": "2024-03-12"
+  },
+  {
+    "ticket_id": "TICK-026",
+    "title": "Cluster upgrade broke ingress",
+    "description": "After upgrading Kubernetes to a new minor version, all external traffic returned 404. Ingress resources still present. Noticed during on-call shift handover.",
+    "resolution": "Upgrade removed a deprecated Ingress API version and the ingress controller version was incompatible. Upgraded ingress controller, migrated manifests to networking.k8s.io/v1 with ingressClassName, and added deprecated API scanning to CI.",
+    "category": "Kubernetes",
+    "priority": "Critical",
+    "created_date": "2024-03-14",
+    "resolved_date": "2024-03-15"
+  },
+  {
+    "ticket_id": "TICK-027",
+    "title": "N+1 queries in GraphQL resolvers",
+    "description": "GraphQL queries for order lists taking 10+ seconds. Database logs show hundreds of identical queries per request. Raised by an enterprise customer through account manager.",
+    "resolution": "Nested resolvers fetched related entities one at a time. Implemented DataLoader batching per request, added query complexity limits, and added query count assertions in integration tests. Added regression test to prevent recurrence.",
+    "category": "Performance",
+    "priority": "High",
+    "created_date": "2024-03-16",
+    "resolved_date": "2024-03-17"
+  },
+  {
+    "ticket_id": "TICK-028",
+    "title": "Conditional Access blocking service principal",
+    "description": "Automated deployment pipeline failing with AADSTS53003 when acquiring token. Pipeline worked until a new Conditional Access policy was enabled tenant-wide. First reported on the community forum.",
+    "resolution": "New Conditional Access policy targeted 'All cloud apps' without excluding workload identities. Scoped policy to user identities only and created a separate workload identity policy restricting service principal sign-ins to known IP ranges. Shared learnings in engineering all-hands.",
+    "category": "Identity",
+    "priority": "Critical",
+    "created_date": "2024-03-18",
+    "resolved_date": "2024-03-18"
+  },
+  {
+    "ticket_id": "TICK-029",
+    "title": "Entra ID guest users cannot access shared app",
+    "description": "External B2B guest users receive AADSTS50020 error when signing in to the partner portal. Internal users unaffected. App registration was recently changed. Raised by an enterprise customer through account manager.",
+    "resolution": "App registration's supported account types was set to 'single tenant' and the guest-sign-in authority used /common. Changed sign-in authority to the tenant-specific endpoint and confirmed guest invitations were redeemed. Documented B2B onboarding steps. Postmortem published and action items tracked.",
+    "category": "Identity",
+    "priority": "High",
+    "created_date": "2024-03-19",
+    "resolved_date": "2024-03-20"
+  },
+  {
+    "ticket_id": "TICK-030",
+    "title": "Storage costs rising from old object versions",
+    "description": "Object storage bill growing despite stable data volume. Flagged during weekly operations review.",
+    "resolution": "Bucket versioning enabled without lifecycle rules, keeping all noncurrent versions. Added lifecycle policy to transition noncurrent versions to archive tier after 30 days and expire after 180 days. Shared learnings in engineering all-hands.",
+    "category": "Storage",
+    "priority": "Low",
+    "created_date": "2024-03-21",
+    "resolved_date": "2024-03-25"
+  },
+  {
+    "ticket_id": "TICK-031",
+    "title": "Video transcoding queue backed up",
+    "description": "User-uploaded videos stuck in 'processing' for over 6 hours. Raised by an enterprise customer through account manager.",
+    "resolution": "Transcoding workers were running on CPU instances and could not keep up after a marketing campaign. Moved to managed media transcoding service with autoscaling and set per-user upload limits. Knowledge base article created for support team.",
+    "category": "Media Processing",
+    "priority": "Medium",
+    "created_date": "2024-03-22",
+    "resolved_date": "2024-03-25"
+  },
+  {
+    "ticket_id": "TICK-032",
+    "title": "Outbound calls failing due to SNAT port exhaustion",
+    "description": "catalog-api intermittently failing to call third-party APIs with connection timeouts under load. Raised by an enterprise customer through account manager.",
+    "resolution": "All outbound traffic shared a few public IPs, exhausting SNAT ports. Deployed NAT gateway with multiple IPs, enabled HTTP connection pooling and reuse in the client. Postmortem published and action items tracked.",
+    "category": "Networking",
+    "priority": "High",
+    "created_date": "2024-03-23",
+    "resolved_date": "2024-03-23"
+  },
+  {
+    "ticket_id": "TICK-033",
+    "title": "Shared file system latency spikes",
+    "description": "Applications using network file share experiencing multi-second I/O waits. Flagged during weekly operations review.",
+    "resolution": "File share burst credits exhausted due to sustained throughput. Moved to provisioned throughput tier, and moved temp files and caches to local SSD. Knowledge base article created for support team.",
+    "category": "Storage",
+    "priority": "Medium",
+    "created_date": "2024-03-26",
+    "resolved_date": "2024-03-27"
+  },
+  {
+    "ticket_id": "TICK-034",
+    "title": "Breaking change in public API broke integrations",
+    "description": "Several partners report integration failures after release v4.2.1. Response field renamed from 'customer_id' to 'customerId'. Reported by the support team via escalation.",
+    "resolution": "Field rename shipped without versioning. Restored old field alongside new one, introduced API versioning policy with deprecation headers, and added contract tests against published OpenAPI spec.",
+    "category": "API",
+    "priority": "Critical",
+    "created_date": "2024-03-29",
+    "resolved_date": "2024-03-29"
+  },
+  {
+    "ticket_id": "TICK-035",
+    "title": "Cloud quota limit blocking deployment",
+    "description": "Deployment to westeurope failing with 'QuotaExceeded' for public IP addresses. Detected by synthetic monitoring.",
+    "resolution": "Subscription hit regional public IP quota due to orphaned IPs from deleted VMs. Cleaned up unattached IPs, requested quota increase, and added a weekly orphaned resource cleanup automation. Postmortem published and action items tracked.",
+    "category": "Cloud Infrastructure",
+    "priority": "Medium",
+    "created_date": "2024-03-30",
+    "resolved_date": "2024-04-01"
+  },
+  {
+    "ticket_id": "TICK-036",
+    "title": "Terraform apply destroying production resources",
+    "description": "Terraform plan in pipeline showed replacement of production database due to a minor parameter change. Apply was nearly approved. Raised by an enterprise customer through account manager.",
+    "resolution": "Changing an immutable attribute forced resource replacement. Added prevent_destroy lifecycle rules on stateful resources, policy-as-code checks blocking destroy actions in prod, and mandatory plan review for replacements. Shared learnings in engineering all-hands.",
+    "category": "Cloud Infrastructure",
+    "priority": "Critical",
+    "created_date": "2024-04-01",
+    "resolved_date": "2024-04-01"
+  },
+  {
+    "ticket_id": "TICK-037",
+    "title": "Pods stuck in CrashLoopBackOff after deploy",
+    "description": "New deployment of notification-service in eu-west-1 cluster never becomes ready. Pods restart repeatedly with exit code 1. Detected by synthetic monitoring.",
+    "resolution": "Liveness probe started before application finished loading configuration, killing the pod. Added startupProbe with longer threshold, separated readiness from liveness checks, and fixed missing ConfigMap key causing slow startup retries.",
+    "category": "Kubernetes",
+    "priority": "Critical",
+    "created_date": "2024-04-02",
+    "resolved_date": "2024-04-02"
+  },
+  {
+    "ticket_id": "TICK-038",
+    "title": "Apple Pay button missing on checkout",
+    "description": "Apple Pay option no longer appearing for Safari users on checkout page. Worked last week.",
+    "resolution": "Domain verification file for Apple Pay was removed during static asset cleanup. Restored file under /.well-known/, re-verified domain, and added the path to deployment protection list. Postmortem published and action items tracked.",
+    "category": "Payment",
+    "priority": "Medium",
+    "created_date": "2024-04-05",
+    "resolved_date": "2024-04-07"
+  },
+  {
+    "ticket_id": "TICK-039",
+    "title": "Serverless function hitting concurrency limit",
+    "description": "Queue-triggered functions throttled; queue backlog growing to 200k messages. Detected by synthetic monitoring.",
+    "resolution": "Account-level concurrency limit shared with another workload. Set reserved concurrency per function, requested limit increase, and configured batch size and max concurrency on event source mapping. Postmortem published and action items tracked.",
+    "category": "Serverless",
+    "priority": "High",
+    "created_date": "2024-04-06",
+    "resolved_date": "2024-04-07"
+  },
+  {
+    "ticket_id": "TICK-040",
+    "title": "DNS change not propagating",
+    "description": "After migrating to new load balancer, some users still reach old servers 24 hours later. Flagged during weekly operations review.",
+    "resolution": "Old record had TTL of 86400 seconds. Kept old endpoint serving and proxying traffic until TTL expired, and adopted practice of lowering TTL 48 hours before planned DNS migrations. Shared learnings in engineering all-hands.",
+    "category": "DNS",
+    "priority": "Medium",
+    "created_date": "2024-04-09",
+    "resolved_date": "2024-04-11"
+  },
+  {
+    "ticket_id": "TICK-041",
+    "title": "Container image vulnerability scan blocking release",
+    "description": "Release blocked by security gate: base image has critical OpenSSL CVE. Reported by the support team via escalation.",
+    "resolution": "Base image was pinned to an old tag. Rebuilt on patched minimal base image, set up automated base-image update PRs, and enabled nightly rescans of running images. Postmortem published and action items tracked.",
+    "category": "Security",
+    "priority": "High",
+    "created_date": "2024-04-11",
+    "resolved_date": "2024-04-13"
+  },
+  {
+    "ticket_id": "TICK-042",
+    "title": "Intermediate certificate missing in chain",
+    "description": "Android and Java clients report 'unable to find valid certification path', while browsers work fine. First reported on the community forum.",
+    "resolution": "Server was configured with leaf certificate only; browsers fetched intermediate via AIA but other clients did not. Installed full certificate chain and added chain validation to certificate deployment checks. Runbook updated with diagnosis and remediation steps.",
+    "category": "SSL/TLS",
+    "priority": "High",
+    "created_date": "2024-04-13",
+    "resolved_date": "2024-04-14"
+  },
+  {
+    "ticket_id": "TICK-043",
+    "title": "Data pipeline failing on schema change",
+    "description": "Nightly ingestion from source system failing with 'column not found' error. Noticed during on-call shift handover.",
+    "resolution": "Source team added and renamed columns without notice. Implemented schema registry with compatibility checks, schema-evolution-tolerant ingestion, and data contracts with source teams. Postmortem published and action items tracked.",
+    "category": "Data Pipeline",
+    "priority": "High",
+    "created_date": "2024-04-14",
+    "resolved_date": "2024-04-15"
+  },
+  {
+    "ticket_id": "TICK-044",
+    "title": "Refunds stuck in pending state",
+    "description": "Refunds initiated by support remain 'pending' for over a week. Gateway shows refunds as completed. Raised by an enterprise customer through account manager.",
+    "resolution": "Gateway webhook for refund.succeeded events was not subscribed after migrating to a new webhook endpoint. Subscribed missing event types, backfilled refund statuses via gateway API, and added webhook event coverage test. Added regression test to prevent recurrence.",
+    "category": "Payment",
+    "priority": "High",
+    "created_date": "2024-04-16",
+    "resolved_date": "2024-04-17"
+  },
+  {
+    "ticket_id": "TICK-045",
+    "title": "Terraform state lock not released",
+    "description": "All infrastructure pipelines failing with 'Error acquiring the state lock'. Lock held for over 4 hours. First reported on the community forum.",
+    "resolution": "A pipeline job was cancelled mid-apply leaving the lock in the backend. Verified no apply was running, force-unlocked with lock ID, and configured pipeline to handle cancellation gracefully with timeouts. Shared learnings in engineering all-hands.",
+    "category": "Cloud Infrastructure",
+    "priority": "Medium",
+    "created_date": "2024-04-17",
+    "resolved_date": "2024-04-19"
+  },
+  {
+    "ticket_id": "TICK-046",
+    "title": "SQL injection vulnerability in search endpoint",
+    "description": "Penetration test found SQL injection in legacy search filter parameter. Noticed during on-call shift handover.",
+    "resolution": "Query built via string concatenation. Rewrote using parameterized queries, added input validation, enabled WAF SQLi rules, and added SAST scanning to pipeline. Shared learnings in engineering all-hands.",
+    "category": "Security",
+    "priority": "Critical",
+    "created_date": "2024-04-20",
+    "resolved_date": "2024-04-21"
+  },
+  {
+    "ticket_id": "TICK-047",
+    "title": "PDF export rendering wrong fonts",
+    "description": "Exported invoices in PDF show boxes instead of characters for Japanese and Arabic customers. Detected by synthetic monitoring.",
+    "resolution": "PDF rendering container lacked CJK and Arabic fonts. Added Noto font family to image, embedded fonts in PDFs, and added right-to-left layout support.",
+    "category": "Export",
+    "priority": "Medium",
+    "created_date": "2024-04-22",
+    "resolved_date": "2024-04-23"
+  },
+  {
+    "ticket_id": "TICK-048",
+    "title": "API gateway returning 504 for long-running requests",
+    "description": "Report generation endpoints returning 504 Gateway Timeout after 30 seconds.",
+    "resolution": "Gateway hard timeout is 30 seconds. Redesigned long operations as async: return 202 Accepted with job ID, poll status endpoint, and notify via webhook on completion. Runbook updated with diagnosis and remediation steps.",
+    "category": "API",
+    "priority": "Medium",
+    "created_date": "2024-04-24",
+    "resolved_date": "2024-04-27"
+  },
+  {
+    "ticket_id": "TICK-049",
+    "title": "Load balancer returning 502 Bad Gateway",
+    "description": "Approximately 5% of requests returning 502 errors. Backend instances report healthy. Detected by synthetic monitoring.",
+    "resolution": "Backend keep-alive timeout (5s) was shorter than load balancer idle timeout (60s), so the LB reused connections the backend had closed. Set backend keep-alive timeout higher than LB idle timeout. Added regression test to prevent recurrence.",
+    "category": "Networking",
+    "priority": "High",
+    "created_date": "2024-04-26",
+    "resolved_date": "2024-04-26"
+  },
+  {
+    "ticket_id": "TICK-050",
+    "title": "New products not appearing in search",
+    "description": "Products added in admin take hours to appear in search results. Noticed during on-call shift handover.",
+    "resolution": "Indexing was batch-driven every 6 hours. Implemented change data capture to stream product updates to search index within seconds and added indexing lag monitoring. Added regression test to prevent recurrence.",
+    "category": "Search",
+    "priority": "Medium",
+    "created_date": "2024-04-29",
+    "resolved_date": "2024-04-30"
+  },
+  {
+    "ticket_id": "TICK-051",
+    "title": "Streaming job checkpoint corruption",
+    "description": "Spark structured streaming job fails to restart after cluster maintenance with checkpoint errors. First reported on the community forum.",
+    "resolution": "Code change altered stateful operator, making checkpoint incompatible. Restarted from new checkpoint with backfill from source offsets, and added checkpoint compatibility checks to deployment process. Added regression test to prevent recurrence.",
+    "category": "Data Pipeline",
+    "priority": "High",
+    "created_date": "2024-04-30",
+    "resolved_date": "2024-04-30"
+  },
+  {
+    "ticket_id": "TICK-052",
+    "title": "Users seeing other users' data",
+    "description": "Two customers reported seeing another customer's account dashboard briefly.",
+    "resolution": "CDN cached personalized API responses because Cache-Control was missing on authenticated endpoints. Purged CDN, set Cache-Control: private, no-store on authenticated responses, and added cache key review in security checklist. Notified affected users per policy. Added regression test to prevent recurrence.",
+    "category": "Security",
+    "priority": "Critical",
+    "created_date": "2024-05-01",
+    "resolved_date": "2024-05-02"
+  },
+  {
+    "ticket_id": "TICK-053",
+    "title": "Malware uploaded through file upload feature",
+    "description": "Security team detected an executable disguised as an image uploaded by a user. Raised by an enterprise customer through account manager.",
+    "resolution": "Upload validation relied only on file extension. Added content-type sniffing via magic bytes, antivirus scanning before files are made available, and served user content from separate sandboxed domain. Runbook updated with diagnosis and remediation steps.",
+    "category": "Security",
+    "priority": "High",
+    "created_date": "2024-05-04",
+    "resolved_date": "2024-05-05"
+  },
+  {
+    "ticket_id": "TICK-054",
+    "title": "App rejected by store review",
+    "description": "Latest mobile release v4.2.1 rejected by App Store review citing missing account deletion option. Detected by synthetic monitoring.",
+    "resolution": "Store policy requires in-app account deletion for apps supporting account creation. Implemented in-app deletion flow calling GDPR deletion API, updated privacy manifest, and resubmitted. Approved within 24 hours. Knowledge base article created for support team.",
+    "category": "Mobile",
+    "priority": "High",
+    "created_date": "2024-05-07",
+    "resolved_date": "2024-05-08"
+  },
+  {
+    "ticket_id": "TICK-055",
+    "title": "3D Secure challenge not displaying",
+    "description": "European customers unable to complete checkout. 3DS authentication popup never appears and payment times out after 10 minutes. Noticed during on-call shift handover.",
+    "resolution": "Content Security Policy update blocked the issuer's challenge iframe. Added required frame-src domains to CSP and implemented fallback redirect flow. Added synthetic checkout test with 3DS test cards.",
+    "category": "Payment",
+    "priority": "Critical",
+    "created_date": "2024-05-09",
+    "resolved_date": "2024-05-09"
+  },
+  {
+    "ticket_id": "TICK-056",
+    "title": "Intermediate certificate missing in chain",
+    "description": "Android and Java clients report 'unable to find valid certification path', while browsers work fine. Noticed during on-call shift handover.",
+    "resolution": "Server was configured with leaf certificate only; browsers fetched intermediate via AIA but other clients did not. Installed full certificate chain and added chain validation to certificate deployment checks. Postmortem published and action items tracked.",
+    "category": "SSL/TLS",
+    "priority": "High",
+    "created_date": "2024-05-10",
+    "resolved_date": "2024-05-11"
+  },
+  {
+    "ticket_id": "TICK-057",
+    "title": "Pipeline secrets exposed in build logs",
+    "description": "Database connection string visible in plain text in CI logs accessible to all developers. Noticed during on-call shift handover.",
+    "resolution": "Script echoed environment variables in debug mode. Rotated credentials, masked secrets in pipeline settings, removed debug echo, and restricted log access. Added log scanning for secret patterns. Postmortem published and action items tracked.",
+    "category": "Security",
+    "priority": "High",
+    "created_date": "2024-05-13",
+    "resolved_date": "2024-05-14"
+  },
+  {
+    "ticket_id": "TICK-058",
+    "title": "Latency spikes every hour on the hour",
+    "description": "p99 latency for checkout-service spikes to 4 seconds at the top of every hour for about 2 minutes. Detected by synthetic monitoring.",
+    "resolution": "Hourly cron jobs from multiple teams all ran at :00, saturating shared database and cache. Spread schedules with jitter, moved heavy jobs to a dedicated worker pool, and added a shared scheduling calendar. Knowledge base article created for support team.",
+    "category": "Performance",
+    "priority": "Medium",
+    "created_date": "2024-05-15",
+    "resolved_date": "2024-05-17"
+  },
+  {
+    "ticket_id": "TICK-059",
+    "title": "Failover took 8 minutes instead of seconds",
+    "description": "During planned maintenance, primary database failover to standby in eastus2 caused 8 minutes of downtime. Expected failover time under 60 seconds.",
+    "resolution": "Application cached the database IP address at startup and ignored the DNS change. Configured connection strings to use the cluster endpoint, reduced DNS TTL, and set JVM DNS cache to 30 seconds. Added quarterly failover drills. Added regression test to prevent recurrence.",
+    "category": "Database",
+    "priority": "High",
+    "created_date": "2024-05-18",
+    "resolved_date": "2024-05-19"
+  },
+  {
+    "ticket_id": "TICK-060",
+    "title": "Serverless function cold starts causing timeouts",
+    "description": "API endpoints backed by serverless functions intermittently take 8-10 seconds, exceeding client timeout. Flagged during weekly operations review.",
+    "resolution": "Cold starts with large deployment package and VPC attachment. Reduced package size, enabled provisioned concurrency for latency-sensitive functions, and lazy-loaded SDK clients. Added regression test to prevent recurrence.",
+    "category": "Serverless",
+    "priority": "High",
+    "created_date": "2024-05-19",
+    "resolved_date": "2024-05-20"
+  },
+  {
+    "ticket_id": "TICK-061",
+    "title": "Build agents running out of disk",
+    "description": "CI jobs failing randomly with 'No space left on device' on self-hosted build agents. Detected by synthetic monitoring.",
+    "resolution": "Docker layer cache and workspace directories never cleaned. Added post-job cleanup, scheduled docker system prune, and moved to ephemeral auto-scaling agents. Added regression test to prevent recurrence.",
+    "category": "CI/CD",
+    "priority": "Medium",
+    "created_date": "2024-05-22",
+    "resolved_date": "2024-05-24"
+  },
+  {
+    "ticket_id": "TICK-062",
+    "title": "PDF export rendering wrong fonts",
+    "description": "Exported invoices in PDF show boxes instead of characters for Japanese and Arabic customers. Noticed during on-call shift handover.",
+    "resolution": "PDF rendering container lacked CJK and Arabic fonts. Added Noto font family to image, embedded fonts in PDFs, and added right-to-left layout support. Postmortem published and action items tracked.",
+    "category": "Export",
+    "priority": "Medium",
+    "created_date": "2024-05-24",
+    "resolved_date": "2024-05-27"
+  },
+  {
+    "ticket_id": "TICK-063",
+    "title": "Flaky integration tests blocking releases",
+    "description": "About 30% of pipeline runs fail on integration tests that pass when re-run. Release velocity dropped.",
+    "resolution": "Tests shared a database and depended on execution order and wall-clock time. Isolated test data per test run using containers, mocked time, and quarantined flaky tests with tracking dashboard. Postmortem published and action items tracked.",
+    "category": "CI/CD",
+    "priority": "Medium",
+    "created_date": "2024-05-25",
+    "resolved_date": "2024-05-26"
+  },
+  {
+    "ticket_id": "TICK-064",
+    "title": "Character data truncated in user profiles",
+    "description": "Users with names containing emoji or certain Asian characters see corrupted or truncated text after saving profile. Noticed during on-call shift handover.",
+    "resolution": "Database columns used a 3-byte utf8 charset that cannot store 4-byte characters. Migrated tables and connection settings to utf8mb4 with utf8mb4_unicode_ci collation and re-saved affected records from audit log.",
+    "category": "Database",
+    "priority": "Medium",
+    "created_date": "2024-05-26",
+    "resolved_date": "2024-05-27"
+  },
+  {
+    "ticket_id": "TICK-065",
+    "title": "Uploaded files corrupted in storage",
+    "description": "Some uploaded PDFs cannot be opened after download. First reported on the community forum.",
+    "resolution": "Multipart upload parts were assembled out of order on network retry. Switched to SDK managed multipart upload with checksum validation (MD5/CRC32C) on each part and on final object. Shared learnings in engineering all-hands.",
+    "category": "File Upload",
+    "priority": "High",
+    "created_date": "2024-05-27",
+    "resolved_date": "2024-05-27"
+  },
+  {
+    "ticket_id": "TICK-066",
+    "title": "N+1 queries in GraphQL resolvers",
+    "description": "GraphQL queries for order lists taking 10+ seconds. Database logs show hundreds of identical queries per request. First reported on the community forum.",
+    "resolution": "Nested resolvers fetched related entities one at a time. Implemented DataLoader batching per request, added query complexity limits, and added query count assertions in integration tests.",
+    "category": "Performance",
+    "priority": "High",
+    "created_date": "2024-05-28",
+    "resolved_date": "2024-05-30"
+  },
+  {
+    "ticket_id": "TICK-067",
+    "title": "Webhook signature validation rejecting valid events",
+    "description": "Incoming webhooks from payment provider rejected with 'invalid signature'. Flagged during weekly operations review.",
+    "resolution": "Body-parsing middleware modified raw request body before signature verification. Preserved raw body for webhook route and used constant-time comparison for HMAC check. Knowledge base article created for support team.",
+    "category": "Integration",
+    "priority": "High",
+    "created_date": "2024-05-31",
+    "resolved_date": "2024-05-31"
+  },
+  {
+    "ticket_id": "TICK-068",
+    "title": "Role changes not taking effect until re-login",
+    "description": "Admins remove user permissions but user retains access for hours. First reported on the community forum.",
+    "resolution": "Permissions were embedded in long-lived access tokens. Reduced token lifetime to 15 minutes, added permission version check on sensitive actions, and token revocation on role change.",
+    "category": "User Management",
+    "priority": "High",
+    "created_date": "2024-06-01",
+    "resolved_date": "2024-06-02"
+  },
+  {
+    "ticket_id": "TICK-069",
+    "title": "Garbage collection pauses causing timeouts",
+    "description": "Java service checkout-service experiencing periodic 5-8 second freezes. Upstream callers time out. GC logs show long full GC pauses. Flagged during weekly operations review.",
+    "resolution": "Heap was oversized with Parallel GC and large object retention from an unbounded in-memory cache. Switched to G1GC with pause target, bounded cache with LRU eviction, and right-sized heap to 70% of container memory. Added regression test to prevent recurrence.",
+    "category": "Performance",
+    "priority": "High",
+    "created_date": "2024-06-02",
+    "resolved_date": "2024-06-03"
+  },
+  {
+    "ticket_id": "TICK-070",
+    "title": "JWT validation fails after key rotation",
+    "description": "All API calls to inventory-service returning 401 with 'signature verification failed'. Issue began immediately after scheduled signing key rotation in us-central1. Noticed during on-call shift handover.",
+    "resolution": "Services cached the JWKS document indefinitely and did not pick up the new signing key. Configured JWKS cache TTL to 10 minutes with forced refetch on unknown 'kid'. Published both old and new keys during rotation overlap window. Added regression test to prevent recurrence.",
+    "category": "Authentication",
+    "priority": "Critical",
+    "created_date": "2024-06-05",
+    "resolved_date": "2024-06-06"
+  },
+  {
+    "ticket_id": "TICK-071",
+    "title": "Load balancer returning 502 Bad Gateway",
+    "description": "Approximately 20% of requests returning 502 errors. Backend instances report healthy. First reported on the community forum.",
+    "resolution": "Backend keep-alive timeout (5s) was shorter than load balancer idle timeout (60s), so the LB reused connections the backend had closed. Set backend keep-alive timeout higher than LB idle timeout. Shared learnings in engineering all-hands.",
+    "category": "Networking",
+    "priority": "High",
+    "created_date": "2024-06-07",
+    "resolved_date": "2024-06-09"
+  },
+  {
+    "ticket_id": "TICK-072",
+    "title": "Subscription renewals not charged",
+    "description": "Monthly subscription renewals silently skipped for some customers. Customers retain access without payment. Billing job reports success. Detected by synthetic monitoring.",
+    "resolution": "Renewal job filtered on next_billing_date in UTC while dates were stored in local timezone, skipping customers near midnight boundaries. Normalized all billing dates to UTC and ran catch-up billing with customer notification. Knowledge base article created for support team.",
+    "category": "Billing",
+    "priority": "High",
+    "created_date": "2024-06-09",
+    "resolved_date": "2024-06-10"
+  },
+  {
+    "ticket_id": "TICK-073",
+    "title": "Mobile app shows blank screen on slow networks",
+    "description": "Users on 3G or poor connections see a blank white screen for 30+ seconds on app launch. First reported on the community forum.",
+    "resolution": "App blocked UI rendering on a sequence of four network calls at startup. Implemented cached-first rendering, parallelized calls, and added skeleton screens. Cold-start time on throttled network reduced from 32s to 4s. Runbook updated with diagnosis and remediation steps.",
+    "category": "Mobile",
+    "priority": "Medium",
+    "created_date": "2024-06-11",
+    "resolved_date": "2024-06-12"
+  },
+  {
+    "ticket_id": "TICK-074",
+    "title": "Timezone bug after daylight saving change",
+    "description": "Scheduled tasks ran one hour late after daylight saving transition; some ran twice. Flagged during weekly operations review.",
+    "resolution": "Schedules stored in local time without timezone info. Stored schedules in UTC with explicit IANA timezone, and handled DST gaps/overlaps explicitly in scheduler.",
+    "category": "Configuration",
+    "priority": "Medium",
+    "created_date": "2024-06-12",
+    "resolved_date": "2024-06-14"
+  },
+  {
+    "ticket_id": "TICK-075",
+    "title": "Offline sync conflicts overwriting user data",
+    "description": "Field technicians losing notes entered offline. After reconnecting, server data overwrites local changes. Flagged during weekly operations review.",
+    "resolution": "Sync used last-write-wins with device clock timestamps, which were often skewed. Implemented server-issued version vectors with field-level merge and conflict UI for manual resolution. Runbook updated with diagnosis and remediation steps.",
+    "category": "Mobile",
+    "priority": "High",
+    "created_date": "2024-06-15",
+    "resolved_date": "2024-06-16"
+  },
+  {
+    "ticket_id": "TICK-076",
+    "title": "SSL certificate expired on public website",
+    "description": "Customers seeing 'Your connection is not private' warnings. Certificate for main domain expired overnight. Flagged during weekly operations review.",
+    "resolution": "Certificate auto-renewal failed because DNS validation record was deleted during DNS cleanup. Renewed certificate, restored validation record, moved to managed certificates with auto-renewal, and added 30/14/7-day expiry alerts. Shared learnings in engineering all-hands.",
+    "category": "SSL/TLS",
+    "priority": "Critical",
+    "created_date": "2024-06-17",
+    "resolved_date": "2024-06-17"
+  },
+  {
+    "ticket_id": "TICK-077",
+    "title": "Pagination returning duplicate and missing records",
+    "description": "API consumers report missing records when paging through results while data is being written. Reported by the support team via escalation.",
+    "resolution": "Offset-based pagination shifted when new records inserted. Switched to cursor-based pagination using stable sort key (created_at, id).",
+    "category": "API",
+    "priority": "Medium",
+    "created_date": "2024-06-19",
+    "resolved_date": "2024-06-20"
+  },
+  {
+    "ticket_id": "TICK-078",
+    "title": "Firewall rule change blocked payment provider callbacks",
+    "description": "Payment confirmation webhooks stopped arriving after network security group cleanup. Detected by synthetic monitoring.",
+    "resolution": "Cleanup removed allow rule for payment provider IP ranges. Restored rule using provider's published IP list via automation, and added synthetic webhook check every 5 minutes.",
+    "category": "Networking",
+    "priority": "Critical",
+    "created_date": "2024-06-21",
+    "resolved_date": "2024-06-21"
+  },
+  {
+    "ticket_id": "TICK-079",
+    "title": "NoSQL throttling errors on hot partition",
+    "description": "auth-gateway receiving ProvisionedThroughputExceeded / 429 errors although overall consumed capacity is below provisioned limit.",
+    "resolution": "Partition key based on date caused all writes for the day to land on a single partition. Redesigned key to include a hashed suffix for write sharding and enabled adaptive capacity. Updated access patterns documentation. Runbook updated with diagnosis and remediation steps.",
+    "category": "Database",
+    "priority": "High",
+    "created_date": "2024-06-23",
+    "resolved_date": "2024-06-24"
+  },
+  {
+    "ticket_id": "TICK-080",
+    "title": "Feature flag misconfiguration exposed beta feature",
+    "description": "Unfinished beta feature visible to all customers. Raised by an enterprise customer through account manager.",
+    "resolution": "Flag targeting rule was edited and default changed to 'on'. Reverted flag, enabled approval workflow for production flag changes, and added audit log alerts. Postmortem published and action items tracked.",
+    "category": "Configuration",
+    "priority": "High",
+    "created_date": "2024-06-24",
+    "resolved_date": "2024-06-24"
+  },
+  {
+    "ticket_id": "TICK-081",
+    "title": "Environment variables mismatched between environments",
+    "description": "Staging works but production fails with null reference error on startup. First reported on the community forum.",
+    "resolution": "New required config key added to staging but not production. Introduced config schema validation at startup that fails fast with clear error, and centralized configuration management per environment. Knowledge base article created for support team.",
+    "category": "Configuration",
+    "priority": "Medium",
+    "created_date": "2024-06-26",
+    "resolved_date": "2024-06-28"
+  },
+  {
+    "ticket_id": "TICK-082",
+    "title": "Account lockouts spiking for legitimate users",
+    "description": "Help desk receiving many calls about locked accounts. Lockout policy triggers after 5 failed attempts. Logs show failed attempts originating from mobile app background sync.",
+    "resolution": "Mobile app was retrying background sync with an expired cached password after users changed it on web. Updated app to stop retrying on 401 and prompt for re-login. Excluded token-based sync failures from lockout counter. Added regression test to prevent recurrence.",
+    "category": "Authentication",
+    "priority": "High",
+    "created_date": "2024-06-29",
+    "resolved_date": "2024-06-29"
+  },
+  {
+    "ticket_id": "TICK-083",
+    "title": "Private endpoint not resolving to private IP",
+    "description": "checkout-service connecting to managed database over public internet despite private endpoint being configured. Detected by synthetic monitoring.",
+    "resolution": "Private DNS zone was not linked to the application's virtual network, so public DNS answers were returned. Linked private DNS zone to VNet, configured DNS forwarding for on-prem, and disabled public network access on database. Shared learnings in engineering all-hands.",
+    "category": "Networking",
+    "priority": "High",
+    "created_date": "2024-06-30",
+    "resolved_date": "2024-07-01"
+  },
+  {
+    "ticket_id": "TICK-084",
+    "title": "Search relevance degraded after reindex",
+    "description": "Users complaining search results are less relevant; exact product names no longer ranked first.",
+    "resolution": "New index mapping removed keyword sub-field and custom analyzer. Restored mapping with keyword field boosting, and added search relevance regression tests with a golden query set. Shared learnings in engineering all-hands.",
+    "category": "Search",
+    "priority": "Medium",
+    "created_date": "2024-07-01",
+    "resolved_date": "2024-07-03"
+  },
+  {
+    "ticket_id": "TICK-085",
+    "title": "Memory leak in single page app",
+    "description": "Browser tab memory grows to 2GB after a few hours of dashboard use; tab crashes. First reported on the community forum.",
+    "resolution": "Event listeners and intervals not cleaned up on component unmount, and websocket subscriptions duplicated on navigation. Added cleanup in effect hooks and verified with heap snapshots. Shared learnings in engineering all-hands.",
+    "category": "Frontend",
+    "priority": "Medium",
+    "created_date": "2024-07-04",
+    "resolved_date": "2024-07-05"
+  },
+  {
+    "ticket_id": "TICK-086",
+    "title": "WebSocket server not scaling across instances",
+    "description": "Users only receive real-time updates when connected to same server instance as sender. Detected by synthetic monitoring.",
+    "resolution": "Messages were broadcast in-process only. Added Redis pub/sub backplane for cross-instance fan-out and sticky sessions for connection affinity. Runbook updated with diagnosis and remediation steps.",
+    "category": "Real-time",
+    "priority": "High",
+    "created_date": "2024-07-05",
+    "resolved_date": "2024-07-06"
+  },
+  {
+    "ticket_id": "TICK-087",
+    "title": "Screen reader cannot navigate forms",
+    "description": "Accessibility audit: form fields not announced correctly to screen reader users. Raised by an enterprise customer through account manager.",
+    "resolution": "Inputs lacked associated labels and error messages were not linked. Added label/for associations, aria-describedby for errors, focus management, and automated accessibility tests (axe) in CI. Postmortem published and action items tracked.",
+    "category": "Accessibility",
+    "priority": "Medium",
+    "created_date": "2024-07-06",
+    "resolved_date": "2024-07-07"
+  },
+  {
+    "ticket_id": "TICK-088",
+    "title": "Unexpected 3x increase in cloud bill",
+    "description": "Monthly cloud cost tripled compared to previous month. No new services launched intentionally. Raised by an enterprise customer through account manager.",
+    "resolution": "Cost analysis found a test environment with large GPU instances left running and NAT gateway data processing from a misrouted backup job. Terminated idle resources, routed backups via private endpoint, and added budget alerts and auto-shutdown tags for non-prod.",
+    "category": "Cloud Infrastructure",
+    "priority": "High",
+    "created_date": "2024-07-08",
+    "resolved_date": "2024-07-09"
+  },
+  {
+    "ticket_id": "TICK-089",
+    "title": "Apple Pay button missing on checkout",
+    "description": "Apple Pay option no longer appearing for Safari users on checkout page. Worked last week.",
+    "resolution": "Domain verification file for Apple Pay was removed during static asset cleanup. Restored file under /.well-known/, re-verified domain, and added the path to deployment protection list. Runbook updated with diagnosis and remediation steps.",
+    "category": "Payment",
+    "priority": "Medium",
+    "created_date": "2024-07-11",
+    "resolved_date": "2024-07-12"
+  },
+  {
+    "ticket_id": "TICK-090",
+    "title": "SQL injection vulnerability in search endpoint",
+    "description": "Penetration test found SQL injection in legacy search filter parameter. Reported by the support team via escalation.",
+    "resolution": "Query built via string concatenation. Rewrote using parameterized queries, added input validation, enabled WAF SQLi rules, and added SAST scanning to pipeline. Added regression test to prevent recurrence.",
+    "category": "Security",
+    "priority": "Critical",
+    "created_date": "2024-07-12",
+    "resolved_date": "2024-07-13"
+  },
+  {
+    "ticket_id": "TICK-091",
+    "title": "Terraform apply destroying production resources",
+    "description": "Terraform plan in pipeline showed replacement of production database due to a minor parameter change. Apply was nearly approved. Reported by the support team via escalation.",
+    "resolution": "Changing an immutable attribute forced resource replacement. Added prevent_destroy lifecycle rules on stateful resources, policy-as-code checks blocking destroy actions in prod, and mandatory plan review for replacements. Shared learnings in engineering all-hands.",
+    "category": "Cloud Infrastructure",
+    "priority": "Critical",
+    "created_date": "2024-07-14",
+    "resolved_date": "2024-07-14"
+  },
+  {
+    "ticket_id": "TICK-092",
+    "title": "Autoscaling group launching instances that fail health checks",
+    "description": "New instances in westeurope terminated shortly after launch. Scaling activity loops continuously. Detected by synthetic monitoring.",
+    "resolution": "Launch template referenced an AMI whose user-data script depended on a package repository that had moved. Pinned repository URL, baked dependencies into a golden image via image pipeline, and increased health check grace period.",
+    "category": "Cloud Infrastructure",
+    "priority": "High",
+    "created_date": "2024-07-17",
+    "resolved_date": "2024-07-17"
+  },
+  {
+    "ticket_id": "TICK-093",
+    "title": "Database storage full in us-east-1",
+    "description": "Managed database instance entered read-only mode. Application unable to write new records. Storage usage at 100%. Raised by an enterprise customer through account manager.",
+    "resolution": "Transaction log growth from a stalled logical replication slot consumed all storage. Dropped the orphaned replication slot, enabled storage autoscaling, and added alerts for replication slot lag and free storage below 20%. Runbook updated with diagnosis and remediation steps.",
+    "category": "Database",
+    "priority": "Critical",
+    "created_date": "2024-07-19",
+    "resolved_date": "2024-07-20"
+  },
+  {
+    "ticket_id": "TICK-094",
+    "title": "Overly permissive IAM role discovered",
+    "description": "Audit found application role with administrator access to entire cloud account. Raised by an enterprise customer through account manager.",
+    "resolution": "Role was created with broad permissions during prototyping. Replaced with least-privilege policy generated from access analyzer logs, and added policy guardrails preventing wildcard admin roles. Knowledge base article created for support team.",
+    "category": "Security",
+    "priority": "High",
+    "created_date": "2024-07-22",
+    "resolved_date": "2024-07-22"
+  },
+  {
+    "ticket_id": "TICK-095",
+    "title": "Message ordering issues in event stream",
+    "description": "Account status events processed out of order, leaving some accounts in wrong state. Flagged during weekly operations review.",
+    "resolution": "Events for the same account were spread across partitions due to random partition key. Used account ID as partition key and added event version check to reject stale updates. Added regression test to prevent recurrence.",
+    "category": "Messaging",
+    "priority": "High",
+    "created_date": "2024-07-23",
+    "resolved_date": "2024-07-23"
+  },
+  {
+    "ticket_id": "TICK-096",
+    "title": "Messages processed more than once",
+    "description": "Customers receiving duplicate shipment notifications.",
+    "resolution": "Consumer crashed after processing but before acknowledging, causing redelivery under at-least-once semantics. Made consumers idempotent using processed-message ID store and deduplication window. Added regression test to prevent recurrence.",
+    "category": "Messaging",
+    "priority": "Medium",
+    "created_date": "2024-07-26",
+    "resolved_date": "2024-07-29"
+  },
+  {
+    "ticket_id": "TICK-097",
+    "title": "Deadlocks in order processing during flash sale",
+    "description": "Database reporting frequent deadlock errors in shipping-service during high-traffic sale event. Approximately 5% of checkout transactions failing and requiring retry. First reported on the community forum.",
+    "resolution": "Two code paths updated inventory and orders tables in opposite order. Standardized lock acquisition order across transactions, shortened transaction scope, and added automatic retry with jitter for deadlock victims. Knowledge base article created for support team.",
+    "category": "Database",
+    "priority": "Critical",
+    "created_date": "2024-07-27",
+    "resolved_date": "2024-07-28"
+  },
+  {
+    "ticket_id": "TICK-098",
+    "title": "High CPU on reporting-service after release v3.4.2",
+    "description": "CPU utilization jumped from 30% to 95% after deploying v3.4.2. Latency p99 increased from 200ms to 2.5s. Raised by an enterprise customer through account manager.",
+    "resolution": "Profiling showed a regex with catastrophic backtracking added in input validation. Rewrote the pattern to be linear, added regex timeout, and introduced performance benchmarks in CI for hot paths. Added regression test to prevent recurrence.",
+    "category": "Performance",
+    "priority": "Critical",
+    "created_date": "2024-07-30",
+    "resolved_date": "2024-07-31"
+  },
+  {
+    "ticket_id": "TICK-099",
+    "title": "Mobile app shows blank screen on slow networks",
+    "description": "Users on 3G or poor connections see a blank white screen for 30+ seconds on app launch. Raised by an enterprise customer through account manager.",
+    "resolution": "App blocked UI rendering on a sequence of four network calls at startup. Implemented cached-first rendering, parallelized calls, and added skeleton screens. Cold-start time on throttled network reduced from 32s to 4s. Shared learnings in engineering all-hands.",
+    "category": "Mobile",
+    "priority": "Medium",
+    "created_date": "2024-08-02",
+    "resolved_date": "2024-08-03"
+  },
+  {
+    "ticket_id": "TICK-100",
+    "title": "Database point-in-time restore missing data",
+    "description": "After restoring database to 10:00 to recover from bad data change, records from 08:00-10:00 missing. Flagged during weekly operations review.",
+    "resolution": "Transaction log backups were configured every 4 hours, not continuously. Enabled continuous log archiving, documented actual RPO, and aligned backup policy with business RPO of 5 minutes. Runbook updated with diagnosis and remediation steps.",
+    "category": "Backup & Recovery",
+    "priority": "High",
+    "created_date": "2024-08-05",
+    "resolved_date": "2024-08-07"
+  },
+  {
+    "ticket_id": "TICK-101",
+    "title": "Video transcoding queue backed up",
+    "description": "User-uploaded videos stuck in 'processing' for over 6 hours. Noticed during on-call shift handover.",
+    "resolution": "Transcoding workers were running on CPU instances and could not keep up after a marketing campaign. Moved to managed media transcoding service with autoscaling and set per-user upload limits. Runbook updated with diagnosis and remediation steps.",
+    "category": "Media Processing",
+    "priority": "Medium",
+    "created_date": "2024-08-07",
+    "resolved_date": "2024-08-09"
+  },
+  {
+    "ticket_id": "TICK-102",
+    "title": "Third-party API rate limit causing failures",
+    "description": "Address validation failing during checkout with 429 responses from provider. Raised by an enterprise customer through account manager.",
+    "resolution": "Every page load validated address even when unchanged. Added caching of validation results, debounced client calls, and implemented exponential backoff with fallback to accept-and-verify-later. Added regression test to prevent recurrence.",
+    "category": "Integration",
+    "priority": "High",
+    "created_date": "2024-08-08",
+    "resolved_date": "2024-08-09"
+  },
+  {
+    "ticket_id": "TICK-103",
+    "title": "Large API responses timing out",
+    "description": "GET /api/reports endpoint timing out after 30 seconds for large accounts.",
+    "resolution": "Endpoint built entire result set in memory. Implemented streaming response, mandatory pagination, gzip compression, and async export job for very large datasets. Runbook updated with diagnosis and remediation steps.",
+    "category": "API",
+    "priority": "Medium",
+    "created_date": "2024-08-10",
+    "resolved_date": "2024-08-12"
+  },
+  {
+    "ticket_id": "TICK-104",
+    "title": "SFTP partner file transfer failing",
+    "description": "Daily file from logistics partner not being processed. SFTP job reports 'host key verification failed'. Raised by an enterprise customer through account manager.",
+    "resolution": "Partner rotated SFTP server host key without notice. Verified new fingerprint with partner out-of-band, updated known_hosts, and added alerting for missing daily file by 06:00. Runbook updated with diagnosis and remediation steps.",
+    "category": "Integration",
+    "priority": "Medium",
+    "created_date": "2024-08-13",
+    "resolved_date": "2024-08-16"
+  },
+  {
+    "ticket_id": "TICK-105",
+    "title": "Pods stuck in CrashLoopBackOff after deploy",
+    "description": "New deployment of auth-gateway in eastus2 cluster never becomes ready. Pods restart repeatedly with exit code 1. Raised by an enterprise customer through account manager.",
+    "resolution": "Liveness probe started before application finished loading configuration, killing the pod. Added startupProbe with longer threshold, separated readiness from liveness checks, and fixed missing ConfigMap key causing slow startup retries.",
+    "category": "Kubernetes",
+    "priority": "Critical",
+    "created_date": "2024-08-14",
+    "resolved_date": "2024-08-14"
+  },
+  {
+    "ticket_id": "TICK-106",
+    "title": "MFA prompts appearing on every login",
+    "description": "Users prompted for multi-factor authentication on every sign-in despite 'remember this device' being checked. Affects approximately 12% of users, mostly on Safari. Reported by the support team via escalation.",
+    "resolution": "Browser privacy settings were blocking the third-party persistence cookie. Moved remember-device cookie to first-party domain and set SameSite=Lax. Updated user guidance for browsers with strict tracking prevention. Runbook updated with diagnosis and remediation steps.",
+    "category": "Authentication",
+    "priority": "Medium",
+    "created_date": "2024-08-17",
+    "resolved_date": "2024-08-20"
+  },
+  {
+    "ticket_id": "TICK-107",
+    "title": "Garbage collection pauses causing timeouts",
+    "description": "Java service billing-api experiencing periodic 5-8 second freezes. Upstream callers time out. GC logs show long full GC pauses. Flagged during weekly operations review.",
+    "resolution": "Heap was oversized with Parallel GC and large object retention from an unbounded in-memory cache. Switched to G1GC with pause target, bounded cache with LRU eviction, and right-sized heap to 70% of container memory. Runbook updated with diagnosis and remediation steps.",
+    "category": "Performance",
+    "priority": "High",
+    "created_date": "2024-08-19",
+    "resolved_date": "2024-08-21"
+  },
+  {
+    "ticket_id": "TICK-108",
+    "title": "Nodes running out of disk space",
+    "description": "Kubernetes nodes in eastus2 reporting DiskPressure, pods being evicted. Mostly affects long-running nodes. Flagged during weekly operations review.",
+    "resolution": "Unused container images and container logs accumulated on nodes. Configured kubelet image garbage collection thresholds, log rotation, and moved to ephemeral OS disks with node auto-upgrade to recycle nodes regularly. Postmortem published and action items tracked.",
+    "category": "Kubernetes",
+    "priority": "High",
+    "created_date": "2024-08-20",
+    "resolved_date": "2024-08-21"
+  },
+  {
+    "ticket_id": "TICK-109",
+    "title": "Entra ID guest users cannot access shared app",
+    "description": "External B2B guest users receive AADSTS50020 error when signing in to the partner portal. Internal users unaffected. App registration was recently changed. First reported on the community forum.",
+    "resolution": "App registration's supported account types was set to 'single tenant' and the guest-sign-in authority used /common. Changed sign-in authority to the tenant-specific endpoint and confirmed guest invitations were redeemed. Documented B2B onboarding steps. Postmortem published and action items tracked.",
+    "category": "Identity",
+    "priority": "High",
+    "created_date": "2024-08-23",
+    "resolved_date": "2024-08-24"
+  },
+  {
+    "ticket_id": "TICK-110",
+    "title": "Duplicate records created on retry",
+    "description": "Customers receiving duplicate orders. Database contains identical rows created milliseconds apart. Correlates with client timeouts and retries. Flagged during weekly operations review.",
+    "resolution": "API was not idempotent; client retries after timeout created new records. Introduced idempotency keys on create endpoints with a unique constraint, and returned the original response for repeated keys. Postmortem published and action items tracked.",
+    "category": "Database",
+    "priority": "High",
+    "created_date": "2024-08-25",
+    "resolved_date": "2024-08-27"
+  },
+  {
+    "ticket_id": "TICK-111",
+    "title": "WebSocket connections dropping every 60 seconds",
+    "description": "Live dashboards disconnect and reconnect every minute. Raised by an enterprise customer through account manager.",
+    "resolution": "Load balancer idle timeout closed connections without traffic. Implemented 30-second ping/pong heartbeat and increased idle timeout for WebSocket listener. Knowledge base article created for support team.",
+    "category": "Real-time",
+    "priority": "Medium",
+    "created_date": "2024-08-26",
+    "resolved_date": "2024-08-28"
+  },
+  {
+    "ticket_id": "TICK-112",
+    "title": "Invoice totals off by one cent",
+    "description": "Customers reporting invoice totals that differ by $0.01 from line item sum. Finance reconciliation failing. Detected by synthetic monitoring.",
+    "resolution": "Tax was calculated per line item using floating-point arithmetic and rounded inconsistently. Switched to decimal arithmetic, defined rounding at invoice level per tax jurisdiction rules, and added reconciliation unit tests. Runbook updated with diagnosis and remediation steps.",
+    "category": "Billing",
+    "priority": "Medium",
+    "created_date": "2024-08-29",
+    "resolved_date": "2024-08-30"
+  },
+  {
+    "ticket_id": "TICK-113",
+    "title": "Cache stampede after Redis restart",
+    "description": "After cache node restart, database CPU hit 100% and site slowed dramatically for 15 minutes. Detected by synthetic monitoring.",
+    "resolution": "All requests missed cache simultaneously and recomputed expensive queries. Implemented request coalescing (single-flight), probabilistic early expiration, and staggered TTLs. Added regression test to prevent recurrence.",
+    "category": "Caching",
+    "priority": "High",
+    "created_date": "2024-09-01",
+    "resolved_date": "2024-09-02"
+  },
+  {
+    "ticket_id": "TICK-114",
+    "title": "Intermittent DNS resolution failures in cluster",
+    "description": "Applications randomly failing with 'Temporary failure in name resolution'. About 1 in 200 requests affected. Flagged during weekly operations review.",
+    "resolution": "conntrack race condition with UDP DNS queries and ndots:5 causing excessive lookups. Deployed NodeLocal DNSCache, set ndots:2 for workloads, and used fully qualified names for external services. Shared learnings in engineering all-hands.",
+    "category": "DNS",
+    "priority": "High",
+    "created_date": "2024-09-04",
+    "resolved_date": "2024-09-05"
+  },
+  {
+    "ticket_id": "TICK-115",
+    "title": "Poison message blocking queue processing",
+    "description": "Order queue processing halted. Same message failing repeatedly and blocking subsequent messages. Flagged during weekly operations review.",
+    "resolution": "Malformed message caused deserialization error and was retried indefinitely. Configured max delivery count with dead-letter queue, added schema validation at producer, and alerting on DLQ depth. Knowledge base article created for support team.",
+    "category": "Messaging",
+    "priority": "High",
+    "created_date": "2024-09-05",
+    "resolved_date": "2024-09-07"
+  },
+  {
+    "ticket_id": "TICK-116",
+    "title": "Poison message blocking queue processing",
+    "description": "Order queue processing halted. Same message failing repeatedly and blocking subsequent messages. Noticed during on-call shift handover.",
+    "resolution": "Malformed message caused deserialization error and was retried indefinitely. Configured max delivery count with dead-letter queue, added schema validation at producer, and alerting on DLQ depth. Shared learnings in engineering all-hands.",
+    "category": "Messaging",
+    "priority": "High",
+    "created_date": "2024-09-07",
+    "resolved_date": "2024-09-08"
+  },
+  {
+    "ticket_id": "TICK-117",
+    "title": "Thread pool exhaustion in API gateway",
+    "description": "API gateway returning 503 errors under moderate load. Thread dumps show all worker threads blocked on downstream HTTP calls. Reported by the support team via escalation.",
+    "resolution": "Downstream calls had no timeouts configured, so a slow dependency held all threads. Added connect/read timeouts, circuit breaker with fallback, and bulkhead isolation per downstream service. Shared learnings in engineering all-hands.",
+    "category": "Performance",
+    "priority": "Critical",
+    "created_date": "2024-09-09",
+    "resolved_date": "2024-09-10"
+  },
+  {
+    "ticket_id": "TICK-118",
+    "title": "Disaster recovery failover test failed",
+    "description": "Annual DR test failed: secondary region environment could not start the application. First reported on the community forum.",
+    "resolution": "Secondary region infrastructure had drifted from primary: missing secrets, outdated container images, and firewall rules. Brought DR environment under the same IaC pipeline, replicated secrets, and scheduled quarterly DR drills. Knowledge base article created for support team.",
+    "category": "Backup & Recovery",
+    "priority": "High",
+    "created_date": "2024-09-10",
+    "resolved_date": "2024-09-11"
+  },
+  {
+    "ticket_id": "TICK-119",
+    "title": "Bad release deployed to all regions at once",
+    "description": "Release v5.1.3 with a configuration bug deployed simultaneously to all regions, causing global outage for 25 minutes. Flagged during weekly operations review.",
+    "resolution": "Pipeline lacked progressive delivery. Implemented canary deployments starting with one region at 5% traffic, automated rollback on SLO breach, and feature flags for risky changes.",
+    "category": "CI/CD",
+    "priority": "Critical",
+    "created_date": "2024-09-11",
+    "resolved_date": "2024-09-11"
+  },
+  {
+    "ticket_id": "TICK-120",
+    "title": "Secrets mounted as stale values after rotation",
+    "description": "reporting-service continues using old database password after rotation in the secrets vault, causing authentication failures. Reported by the support team via escalation.",
+    "resolution": "Secrets were injected as environment variables, which are not refreshed in running pods. Switched to CSI secrets store driver with volume mounts and rotation polling, and added reload-on-change to the application. Knowledge base article created for support team.",
+    "category": "Kubernetes",
+    "priority": "High",
+    "created_date": "2024-09-13",
+    "resolved_date": "2024-09-14"
+  },
+  {
+    "ticket_id": "TICK-121",
+    "title": "Pagination returning duplicate and missing records",
+    "description": "API consumers report missing records when paging through results while data is being written.",
+    "resolution": "Offset-based pagination shifted when new records inserted. Switched to cursor-based pagination using stable sort key (created_at, id). Runbook updated with diagnosis and remediation steps.",
+    "category": "API",
+    "priority": "Medium",
+    "created_date": "2024-09-16",
+    "resolved_date": "2024-09-18"
+  },
+  {
+    "ticket_id": "TICK-122",
+    "title": "WebSocket connections dropping every 60 seconds",
+    "description": "Live dashboards disconnect and reconnect every minute. Reported by the support team via escalation.",
+    "resolution": "Load balancer idle timeout closed connections without traffic. Implemented 30-second ping/pong heartbeat and increased idle timeout for WebSocket listener. Runbook updated with diagnosis and remediation steps.",
+    "category": "Real-time",
+    "priority": "Medium",
+    "created_date": "2024-09-19",
+    "resolved_date": "2024-09-20"
+  },
+  {
+    "ticket_id": "TICK-123",
+    "title": "API gateway returning 504 for long-running requests",
+    "description": "Report generation endpoints returning 504 Gateway Timeout after 30 seconds. Raised by an enterprise customer through account manager.",
+    "resolution": "Gateway hard timeout is 30 seconds. Redesigned long operations as async: return 202 Accepted with job ID, poll status endpoint, and notify via webhook on completion. Shared learnings in engineering all-hands.",
+    "category": "API",
+    "priority": "Medium",
+    "created_date": "2024-09-22",
+    "resolved_date": "2024-09-23"
+  },
+  {
+    "ticket_id": "TICK-124",
+    "title": "Memory leak in single page app",
+    "description": "Browser tab memory grows to 2GB after a few hours of dashboard use; tab crashes. Raised by an enterprise customer through account manager.",
+    "resolution": "Event listeners and intervals not cleaned up on component unmount, and websocket subscriptions duplicated on navigation. Added cleanup in effect hooks and verified with heap snapshots. Postmortem published and action items tracked.",
+    "category": "Frontend",
+    "priority": "Medium",
+    "created_date": "2024-09-25",
+    "resolved_date": "2024-09-28"
+  },
+  {
+    "ticket_id": "TICK-125",
+    "title": "Kerberos authentication failing on new servers",
+    "description": "Newly provisioned application servers cannot authenticate users via Kerberos. Error 'KRB_AP_ERR_MODIFIED' in logs. Older servers in the same pool work fine. Flagged during weekly operations review.",
+    "resolution": "New servers were missing SPN registration for the service account and DNS reverse lookup records. Registered SPNs, added PTR records, and added both steps to the server provisioning automation. Postmortem published and action items tracked.",
+    "category": "Authentication",
+    "priority": "High",
+    "created_date": "2024-09-26",
+    "resolved_date": "2024-09-28"
+  },
+  {
+    "ticket_id": "TICK-126",
+    "title": "ETL job producing duplicate rows in warehouse",
+    "description": "Daily revenue dashboard shows doubled figures for one day. Raised by an enterprise customer through account manager.",
+    "resolution": "ETL job was retried after partial failure and appended data again. Made loads idempotent using MERGE on natural keys and partition overwrite per load date. Added regression test to prevent recurrence.",
+    "category": "Data Pipeline",
+    "priority": "High",
+    "created_date": "2024-09-28",
+    "resolved_date": "2024-09-28"
+  },
+  {
+    "ticket_id": "TICK-127",
+    "title": "Thread pool exhaustion in API gateway",
+    "description": "API gateway returning 503 errors under moderate load. Thread dumps show all worker threads blocked on downstream HTTP calls. Raised by an enterprise customer through account manager.",
+    "resolution": "Downstream calls had no timeouts configured, so a slow dependency held all threads. Added connect/read timeouts, circuit breaker with fallback, and bulkhead isolation per downstream service.",
+    "category": "Performance",
+    "priority": "Critical",
+    "created_date": "2024-09-29",
+    "resolved_date": "2024-09-30"
+  },
+  {
+    "ticket_id": "TICK-128",
+    "title": "Checkout button unresponsive on Safari",
+    "description": "Safari users unable to click 'Place Order'. Other browsers work. Flagged during weekly operations review.",
+    "resolution": "Code used a JavaScript API not supported in the Safari version. Added polyfill, configured Babel/browserslist targets, and added Safari to cross-browser automated tests. Postmortem published and action items tracked.",
+    "category": "Frontend",
+    "priority": "Critical",
+    "created_date": "2024-10-02",
+    "resolved_date": "2024-10-02"
+  },
+  {
+    "ticket_id": "TICK-129",
+    "title": "Container memory limit causing OOMKills",
+    "description": "Pods for user-service restarting several times per hour with OOMKilled status. No obvious memory leak in application metrics. Noticed during on-call shift handover.",
+    "resolution": "JVM was not container-aware and sized heap from host memory. Set -XX:MaxRAMPercentage=75, aligned requests and limits, and added memory usage dashboards per pod. Added regression test to prevent recurrence.",
+    "category": "Kubernetes",
+    "priority": "High",
+    "created_date": "2024-10-05",
+    "resolved_date": "2024-10-06"
+  },
+  {
+    "ticket_id": "TICK-130",
+    "title": "Terraform state lock not released",
+    "description": "All infrastructure pipelines failing with 'Error acquiring the state lock'. Lock held for over 4 hours. Noticed during on-call shift handover.",
+    "resolution": "A pipeline job was cancelled mid-apply leaving the lock in the backend. Verified no apply was running, force-unlocked with lock ID, and configured pipeline to handle cancellation gracefully with timeouts. Knowledge base article created for support team.",
+    "category": "Cloud Infrastructure",
+    "priority": "Medium",
+    "created_date": "2024-10-07",
+    "resolved_date": "2024-10-08"
+  },
+  {
+    "ticket_id": "TICK-131",
+    "title": "Connection storms after application restart",
+    "description": "Every deployment causes database CPU to spike to 100% for several minutes and login failures for users. Reported by the support team via escalation.",
+    "resolution": "All 12 pods opened full connection pools simultaneously and warmed caches with heavy queries. Introduced a connection proxy (PgBouncer), staggered rollout with maxSurge limits, and lazy cache warming. Knowledge base article created for support team.",
+    "category": "Database",
+    "priority": "High",
+    "created_date": "2024-10-08",
+    "resolved_date": "2024-10-09"
+  },
+  {
+    "ticket_id": "TICK-132",
+    "title": "Log ingestion costs exploded",
+    "description": "Logging platform costs increased 5x in one month. Ingestion volume at 2TB/day.",
+    "resolution": "Debug logging left enabled in production for auth-gateway after an incident. Reverted log level, implemented dynamic log levels, sampled high-volume info logs, and set daily ingestion caps with alerts. Runbook updated with diagnosis and remediation steps.",
+    "category": "Monitoring",
+    "priority": "High",
+    "created_date": "2024-10-09",
+    "resolved_date": "2024-10-10"
+  },
+  {
+    "ticket_id": "TICK-133",
+    "title": "Date formats wrong for non-US users",
+    "description": "UK users see dates as MM/DD/YYYY causing confusion with appointments. First reported on the community forum.",
+    "resolution": "Dates were hardcoded to US format. Implemented locale-aware formatting with Intl API based on user preference and showed timezone with appointment times. Knowledge base article created for support team.",
+    "category": "Localization",
+    "priority": "Low",
+    "created_date": "2024-10-10",
+    "resolved_date": "2024-10-12"
+  },
+  {
+    "ticket_id": "TICK-134",
+    "title": "Translations missing after release",
+    "description": "German and French users see English text in new settings page. First reported on the community forum.",
+    "resolution": "New strings not extracted to translation files before release. Added string extraction to build, translation completeness check, and fallback logging for missing keys. Knowledge base article created for support team.",
+    "category": "Localization",
+    "priority": "Low",
+    "created_date": "2024-10-11",
+    "resolved_date": "2024-10-13"
+  },
+  {
+    "ticket_id": "TICK-135",
+    "title": "SMS verification codes not delivered in some countries",
+    "description": "Users in certain countries never receive SMS one-time codes. Flagged during weekly operations review.",
+    "resolution": "SMS provider required sender ID registration for those countries. Registered sender IDs, added fallback provider routing, and offered voice call and authenticator app alternatives. Postmortem published and action items tracked.",
+    "category": "Notifications",
+    "priority": "High",
+    "created_date": "2024-10-12",
+    "resolved_date": "2024-10-14"
+  },
+  {
+    "ticket_id": "TICK-136",
+    "title": "Read replica lag causing stale data",
+    "description": "Users see outdated account balances immediately after making changes. Read replica in westeurope showing replication lag of up to 45 seconds. First reported on the community forum.",
+    "resolution": "Heavy analytics queries were running on the same replica serving application reads, starving the replication apply thread. Moved analytics to a dedicated replica, routed read-after-write requests to primary, and added replica lag alerts at 5 seconds. Runbook updated with diagnosis and remediation steps.",
+    "category": "Database",
+    "priority": "High",
+    "created_date": "2024-10-15",
+    "resolved_date": "2024-10-15"
+  },
+  {
+    "ticket_id": "TICK-137",
+    "title": "Private endpoint not resolving to private IP",
+    "description": "reporting-service connecting to managed database over public internet despite private endpoint being configured.",
+    "resolution": "Private DNS zone was not linked to the application's virtual network, so public DNS answers were returned. Linked private DNS zone to VNet, configured DNS forwarding for on-prem, and disabled public network access on database. Added regression test to prevent recurrence.",
+    "category": "Networking",
+    "priority": "High",
+    "created_date": "2024-10-17",
+    "resolved_date": "2024-10-19"
+  },
+  {
+    "ticket_id": "TICK-138",
+    "title": "Intermittent DNS resolution failures in cluster",
+    "description": "Applications randomly failing with 'Temporary failure in name resolution'. About 1 in 200 requests affected. Raised by an enterprise customer through account manager.",
+    "resolution": "conntrack race condition with UDP DNS queries and ndots:5 causing excessive lookups. Deployed NodeLocal DNSCache, set ndots:2 for workloads, and used fully qualified names for external services. Shared learnings in engineering all-hands.",
+    "category": "DNS",
+    "priority": "High",
+    "created_date": "2024-10-18",
+    "resolved_date": "2024-10-19"
+  },
+  {
+    "ticket_id": "TICK-139",
+    "title": "Character data truncated in user profiles",
+    "description": "Users with names containing emoji or certain Asian characters see corrupted or truncated text after saving profile. First reported on the community forum.",
+    "resolution": "Database columns used a 3-byte utf8 charset that cannot store 4-byte characters. Migrated tables and connection settings to utf8mb4 with utf8mb4_unicode_ci collation and re-saved affected records from audit log. Shared learnings in engineering all-hands.",
+    "category": "Database",
+    "priority": "Medium",
+    "created_date": "2024-10-19",
+    "resolved_date": "2024-10-21"
+  },
+  {
+    "ticket_id": "TICK-140",
+    "title": "Database point-in-time restore missing data",
+    "description": "After restoring database to 10:00 to recover from bad data change, records from 08:00-10:00 missing. Flagged during weekly operations review.",
+    "resolution": "Transaction log backups were configured every 4 hours, not continuously. Enabled continuous log archiving, documented actual RPO, and aligned backup policy with business RPO of 5 minutes. Shared learnings in engineering all-hands.",
+    "category": "Backup & Recovery",
+    "priority": "High",
+    "created_date": "2024-10-22",
+    "resolved_date": "2024-10-23"
+  },
+  {
+    "ticket_id": "TICK-141",
+    "title": "Checkout button unresponsive on Safari",
+    "description": "Safari users unable to click 'Place Order'. Other browsers work. Noticed during on-call shift handover.",
+    "resolution": "Code used a JavaScript API not supported in the Safari version. Added polyfill, configured Babel/browserslist targets, and added Safari to cross-browser automated tests. Added regression test to prevent recurrence.",
+    "category": "Frontend",
+    "priority": "Critical",
+    "created_date": "2024-10-25",
+    "resolved_date": "2024-10-26"
+  },
+  {
+    "ticket_id": "TICK-142",
+    "title": "Deployment pipeline failing on dependency install",
+    "description": "All builds failing at npm install step with 'ETARGET no matching version found'. Detected by synthetic monitoring.",
+    "resolution": "Builds resolved floating version ranges and a transitive package was unpublished. Committed lockfile, switched to npm ci, and configured an internal package proxy to cache dependencies.",
+    "category": "CI/CD",
+    "priority": "High",
+    "created_date": "2024-10-26",
+    "resolved_date": "2024-10-28"
+  },
+  {
+    "ticket_id": "TICK-143",
+    "title": "Disaster recovery failover test failed",
+    "description": "Annual DR test failed: secondary region environment could not start the application. Flagged during weekly operations review.",
+    "resolution": "Secondary region infrastructure had drifted from primary: missing secrets, outdated container images, and firewall rules. Brought DR environment under the same IaC pipeline, replicated secrets, and scheduled quarterly DR drills.",
+    "category": "Backup & Recovery",
+    "priority": "High",
+    "created_date": "2024-10-27",
+    "resolved_date": "2024-10-28"
+  },
+  {
+    "ticket_id": "TICK-144",
+    "title": "OAuth token refresh failing for shipping-service clients",
+    "description": "Clients integrating with shipping-service receive 401 Unauthorized roughly 60 minutes after login. Refresh token requests return 'invalid_grant'. Started after identity provider upgrade to v5.0. Noticed during on-call shift handover.",
+    "resolution": "Refresh token rotation was enabled on the IdP, but clients were reusing the old refresh token. Updated client SDK to persist the newly issued refresh token on every refresh. Added grace period of 30 seconds for concurrent refresh requests. Knowledge base article created for support team.",
+    "category": "Authentication",
+    "priority": "High",
+    "created_date": "2024-10-28",
+    "resolved_date": "2024-10-30"
+  },
+  {
+    "ticket_id": "TICK-145",
+    "title": "Cache stampede after Redis restart",
+    "description": "After cache node restart, database CPU hit 100% and site slowed dramatically for 15 minutes. First reported on the community forum.",
+    "resolution": "All requests missed cache simultaneously and recomputed expensive queries. Implemented request coalescing (single-flight), probabilistic early expiration, and staggered TTLs. Shared learnings in engineering all-hands.",
+    "category": "Caching",
+    "priority": "High",
+    "created_date": "2024-10-29",
+    "resolved_date": "2024-10-30"
+  },
+  {
+    "ticket_id": "TICK-146",
+    "title": "Data pipeline failing on schema change",
+    "description": "Nightly ingestion from source system failing with 'column not found' error. Reported by the support team via escalation.",
+    "resolution": "Source team added and renamed columns without notice. Implemented schema registry with compatibility checks, schema-evolution-tolerant ingestion, and data contracts with source teams. Knowledge base article created for support team.",
+    "category": "Data Pipeline",
+    "priority": "High",
+    "created_date": "2024-10-30",
+    "resolved_date": "2024-10-31"
+  },
+  {
+    "ticket_id": "TICK-147",
+    "title": "Brute-force login attempts from botnet",
+    "description": "Login endpoint receiving 50,000 requests per minute from distributed IPs. Some accounts compromised via credential stuffing. Reported by the support team via escalation.",
+    "resolution": "Enabled WAF bot protection and rate limiting per IP and per account, added CAPTCHA after failed attempts, checked passwords against breached password list, and forced resets for affected accounts. Runbook updated with diagnosis and remediation steps.",
+    "category": "Security",
+    "priority": "Critical",
+    "created_date": "2024-11-02",
+    "resolved_date": "2024-11-02"
+  },
+  {
+    "ticket_id": "TICK-148",
+    "title": "Email template showing raw placeholders",
+    "description": "Customers received emails with '{first_name}' instead of names. First reported on the community forum.",
+    "resolution": "Template engine upgrade changed variable syntax handling for missing values. Fixed template variables, added template rendering tests with sample data, and enabled strict mode to fail on missing variables.",
+    "category": "Email",
+    "priority": "Medium",
+    "created_date": "2024-11-04",
+    "resolved_date": "2024-11-06"
+  },
+  {
+    "ticket_id": "TICK-149",
+    "title": "Notification emails sent to wrong users",
+    "description": "A batch of order confirmation emails sent to incorrect recipients. Flagged during weekly operations review.",
+    "resolution": "Race condition in batch job reused a shared mutable recipient object across threads. Refactored to immutable per-message payloads, added recipient/order consistency check before send, and notified affected users. Shared learnings in engineering all-hands.",
+    "category": "Notifications",
+    "priority": "Critical",
+    "created_date": "2024-11-05",
+    "resolved_date": "2024-11-05"
+  },
+  {
+    "ticket_id": "TICK-150",
+    "title": "Expired TLS certificate on internal service",
+    "description": "Service-to-service calls to checkout-service failing with certificate errors. Raised by an enterprise customer through account manager.",
+    "resolution": "Internal certificates issued manually with 1-year validity. Deployed internal certificate automation (cert-manager) with short-lived certificates and automatic rotation.",
+    "category": "SSL/TLS",
+    "priority": "High",
+    "created_date": "2024-11-08",
+    "resolved_date": "2024-11-09"
+  },
+  {
+    "ticket_id": "TICK-151",
+    "title": "Distributed traces missing spans",
+    "description": "Traces for checkout requests show gaps; downstream service spans not linked. Raised by an enterprise customer through account manager.",
+    "resolution": "Message queue consumers did not propagate trace context headers. Added W3C traceparent propagation in producer/consumer middleware via OpenTelemetry instrumentation. Added regression test to prevent recurrence.",
+    "category": "Monitoring",
+    "priority": "Low",
+    "created_date": "2024-11-09",
+    "resolved_date": "2024-11-16"
+  },
+  {
+    "ticket_id": "TICK-152",
+    "title": "Slow queries after statistics became stale",
+    "description": "Report queries that previously took 2 seconds now take over 3 minutes. No code changes deployed. Execution plans show full table scans. Detected by synthetic monitoring.",
+    "resolution": "Query optimizer statistics were outdated after a large bulk import, producing poor plans. Ran ANALYZE on affected tables, tuned autovacuum/auto-analyze thresholds for large tables, and scheduled stats refresh after bulk loads. Shared learnings in engineering all-hands.",
+    "category": "Database",
+    "priority": "High",
+    "created_date": "2024-11-12",
+    "resolved_date": "2024-11-12"
+  },
+  {
+    "ticket_id": "TICK-153",
+    "title": "JWT validation fails after key rotation",
+    "description": "All API calls to checkout-service returning 401 with 'signature verification failed'. Issue began immediately after scheduled signing key rotation in us-east-1. Reported by the support team via escalation.",
+    "resolution": "Services cached the JWKS document indefinitely and did not pick up the new signing key. Configured JWKS cache TTL to 10 minutes with forced refetch on unknown 'kid'. Published both old and new keys during rotation overlap window. Runbook updated with diagnosis and remediation steps.",
+    "category": "Authentication",
+    "priority": "Critical",
+    "created_date": "2024-11-14",
+    "resolved_date": "2024-11-14"
+  },
+  {
+    "ticket_id": "TICK-154",
+    "title": "App rejected by store review",
+    "description": "Latest mobile release v4.0 rejected by App Store review citing missing account deletion option.",
+    "resolution": "Store policy requires in-app account deletion for apps supporting account creation. Implemented in-app deletion flow calling GDPR deletion API, updated privacy manifest, and resubmitted. Approved within 24 hours. Knowledge base article created for support team.",
+    "category": "Mobile",
+    "priority": "High",
+    "created_date": "2024-11-15",
+    "resolved_date": "2024-11-16"
+  },
+  {
+    "ticket_id": "TICK-155",
+    "title": "Date formats wrong for non-US users",
+    "description": "UK users see dates as MM/DD/YYYY causing confusion with appointments. Detected by synthetic monitoring.",
+    "resolution": "Dates were hardcoded to US format. Implemented locale-aware formatting with Intl API based on user preference and showed timezone with appointment times. Added regression test to prevent recurrence.",
+    "category": "Localization",
+    "priority": "Low",
+    "created_date": "2024-11-17",
+    "resolved_date": "2024-11-24"
+  },
+  {
+    "ticket_id": "TICK-156",
+    "title": "Email template showing raw placeholders",
+    "description": "Customers received emails with '{first_name}' instead of names. Noticed during on-call shift handover.",
+    "resolution": "Template engine upgrade changed variable syntax handling for missing values. Fixed template variables, added template rendering tests with sample data, and enabled strict mode to fail on missing variables.",
+    "category": "Email",
+    "priority": "Medium",
+    "created_date": "2024-11-18",
+    "resolved_date": "2024-11-19"
+  },
+  {
+    "ticket_id": "TICK-157",
+    "title": "Secrets mounted as stale values after rotation",
+    "description": "order-service continues using old database password after rotation in the secrets vault, causing authentication failures. First reported on the community forum.",
+    "resolution": "Secrets were injected as environment variables, which are not refreshed in running pods. Switched to CSI secrets store driver with volume mounts and rotation polling, and added reload-on-change to the application. Added regression test to prevent recurrence.",
+    "category": "Kubernetes",
+    "priority": "High",
+    "created_date": "2024-11-21",
+    "resolved_date": "2024-11-23"
+  },
+  {
+    "ticket_id": "TICK-158",
+    "title": "Alert fatigue causing missed incidents",
+    "description": "On-call engineers receiving 200+ alerts per week, mostly noise. A real disk alert was ignored.",
+    "resolution": "Alerts were threshold-based on symptoms of minor fluctuations. Reworked alerting around SLOs and burn rates, removed non-actionable alerts, and added runbook links to every alert. Shared learnings in engineering all-hands.",
+    "category": "Monitoring",
+    "priority": "Medium",
+    "created_date": "2024-11-23",
+    "resolved_date": "2024-11-25"
+  },
+  {
+    "ticket_id": "TICK-159",
+    "title": "Overly permissive IAM role discovered",
+    "description": "Audit found application role with administrator access to entire cloud account. First reported on the community forum.",
+    "resolution": "Role was created with broad permissions during prototyping. Replaced with least-privilege policy generated from access analyzer logs, and added policy guardrails preventing wildcard admin roles. Added regression test to prevent recurrence.",
+    "category": "Security",
+    "priority": "High",
+    "created_date": "2024-11-25",
+    "resolved_date": "2024-11-25"
+  },
+  {
+    "ticket_id": "TICK-160",
+    "title": "Cross-site scripting in user comments",
+    "description": "Bug bounty report: script tags in comments execute in other users' browsers.",
+    "resolution": "Comment rendering used innerHTML without sanitization. Switched to safe text rendering, added HTML sanitization library for rich text, and deployed strict Content Security Policy. Runbook updated with diagnosis and remediation steps.",
+    "category": "Security",
+    "priority": "Critical",
+    "created_date": "2024-11-28",
+    "resolved_date": "2024-11-28"
+  },
+  {
+    "ticket_id": "TICK-161",
+    "title": "Brute-force login attempts from botnet",
+    "description": "Login endpoint receiving 50,000 requests per minute from distributed IPs. Some accounts compromised via credential stuffing. Flagged during weekly operations review.",
+    "resolution": "Enabled WAF bot protection and rate limiting per IP and per account, added CAPTCHA after failed attempts, checked passwords against breached password list, and forced resets for affected accounts.",
+    "category": "Security",
+    "priority": "Critical",
+    "created_date": "2024-11-29",
+    "resolved_date": "2024-11-29"
+  },
+  {
+    "ticket_id": "TICK-162",
+    "title": "Slow queries after statistics became stale",
+    "description": "Report queries that previously took 2 seconds now take over 3 minutes. No code changes deployed. Execution plans show full table scans. First reported on the community forum.",
+    "resolution": "Query optimizer statistics were outdated after a large bulk import, producing poor plans. Ran ANALYZE on affected tables, tuned autovacuum/auto-analyze thresholds for large tables, and scheduled stats refresh after bulk loads. Runbook updated with diagnosis and remediation steps.",
+    "category": "Database",
+    "priority": "High",
+    "created_date": "2024-11-30",
+    "resolved_date": "2024-11-30"
+  },
+  {
+    "ticket_id": "TICK-163",
+    "title": "WebSocket server not scaling across instances",
+    "description": "Users only receive real-time updates when connected to same server instance as sender. Raised by an enterprise customer through account manager.",
+    "resolution": "Messages were broadcast in-process only. Added Redis pub/sub backplane for cross-instance fan-out and sticky sessions for connection affinity. Runbook updated with diagnosis and remediation steps.",
+    "category": "Real-time",
+    "priority": "High",
+    "created_date": "2024-12-01",
+    "resolved_date": "2024-12-03"
+  },
+  {
+    "ticket_id": "TICK-164",
+    "title": "Malware uploaded through file upload feature",
+    "description": "Security team detected an executable disguised as an image uploaded by a user. First reported on the community forum.",
+    "resolution": "Upload validation relied only on file extension. Added content-type sniffing via magic bytes, antivirus scanning before files are made available, and served user content from separate sandboxed domain. Postmortem published and action items tracked.",
+    "category": "Security",
+    "priority": "High",
+    "created_date": "2024-12-02",
+    "resolved_date": "2024-12-03"
+  },
+  {
+    "ticket_id": "TICK-165",
+    "title": "TLS handshake failures from legacy clients",
+    "description": "Some enterprise customers' integrations failing with 'handshake failure' after load balancer security policy update. Raised by an enterprise customer through account manager.",
+    "resolution": "New policy disabled TLS 1.0/1.1 and older cipher suites. Identified affected customers via TLS logs, provided a temporary legacy endpoint with sunset date, and communicated migration requirements. Knowledge base article created for support team.",
+    "category": "SSL/TLS",
+    "priority": "High",
+    "created_date": "2024-12-03",
+    "resolved_date": "2024-12-03"
+  },
+  {
+    "ticket_id": "TICK-166",
+    "title": "DNS change not propagating",
+    "description": "After migrating to new load balancer, some users still reach old servers 24 hours later. First reported on the community forum.",
+    "resolution": "Old record had TTL of 86400 seconds. Kept old endpoint serving and proxying traffic until TTL expired, and adopted practice of lowering TTL 48 hours before planned DNS migrations. Shared learnings in engineering all-hands.",
+    "category": "DNS",
+    "priority": "Medium",
+    "created_date": "2024-12-04",
+    "resolved_date": "2024-12-07"
+  },
+  {
+    "ticket_id": "TICK-167",
+    "title": "Build agents running out of disk",
+    "description": "CI jobs failing randomly with 'No space left on device' on self-hosted build agents. First reported on the community forum.",
+    "resolution": "Docker layer cache and workspace directories never cleaned. Added post-job cleanup, scheduled docker system prune, and moved to ephemeral auto-scaling agents. Added regression test to prevent recurrence.",
+    "category": "CI/CD",
+    "priority": "Medium",
+    "created_date": "2024-12-05",
+    "resolved_date": "2024-12-08"
+  },
+  {
+    "ticket_id": "TICK-168",
+    "title": "Redis memory full, evicting session data",
+    "description": "Users randomly logged out. Redis shows evicted_keys increasing and memory at maxmemory. First reported on the community forum.",
+    "resolution": "Sessions and cache shared one Redis instance with allkeys-lru policy. Separated sessions into a dedicated instance with noeviction policy, set TTLs on all cache keys, and scaled memory.",
+    "category": "Caching",
+    "priority": "High",
+    "created_date": "2024-12-06",
+    "resolved_date": "2024-12-07"
+  },
+  {
+    "ticket_id": "TICK-169",
+    "title": "Emails landing in spam for Gmail users",
+    "description": "Gmail users report transactional emails in spam folder after domain change. Raised by an enterprise customer through account manager.",
+    "resolution": "New sending domain lacked DKIM alignment and had no DMARC policy. Configured DKIM signing for new domain, published DMARC, and registered with Gmail Postmaster tools to monitor reputation. Knowledge base article created for support team.",
+    "category": "Email",
+    "priority": "High",
+    "created_date": "2024-12-07",
+    "resolved_date": "2024-12-08"
+  },
+  {
+    "ticket_id": "TICK-170",
+    "title": "Excel export truncating leading zeros",
+    "description": "Exported ZIP codes and product codes lose leading zeros when opened in Excel. Reported by the support team via escalation.",
+    "resolution": "Values exported as plain CSV were interpreted as numbers by Excel. Added native XLSX export with text-formatted columns and documented CSV import guidance. Knowledge base article created for support team.",
+    "category": "Export",
+    "priority": "Low",
+    "created_date": "2024-12-10",
+    "resolved_date": "2024-12-12"
+  },
+  {
+    "ticket_id": "TICK-171",
+    "title": "Bad release deployed to all regions at once",
+    "description": "Release v5.1.3 with a configuration bug deployed simultaneously to all regions, causing global outage for 25 minutes. Reported by the support team via escalation.",
+    "resolution": "Pipeline lacked progressive delivery. Implemented canary deployments starting with one region at 5% traffic, automated rollback on SLO breach, and feature flags for risky changes. Shared learnings in engineering all-hands.",
+    "category": "CI/CD",
+    "priority": "Critical",
+    "created_date": "2024-12-13",
+    "resolved_date": "2024-12-14"
+  },
+  {
+    "ticket_id": "TICK-172",
+    "title": "Availability zone outage took down service",
+    "description": "catalog-api unavailable for 40 minutes during a cloud provider zonal outage in ap-southeast-1. First reported on the community forum.",
+    "resolution": "All instances and the database were deployed in a single availability zone. Redesigned for multi-AZ with zone-redundant load balancer, database standby in another zone, and pod topology spread constraints.",
+    "category": "Cloud Infrastructure",
+    "priority": "Critical",
+    "created_date": "2024-12-14",
+    "resolved_date": "2024-12-14"
+  },
+  {
+    "ticket_id": "TICK-173",
+    "title": "Deployment pipeline failing on dependency install",
+    "description": "All builds failing at npm install step with 'ETARGET no matching version found'. Flagged during weekly operations review.",
+    "resolution": "Builds resolved floating version ranges and a transitive package was unpublished. Committed lockfile, switched to npm ci, and configured an internal package proxy to cache dependencies.",
+    "category": "CI/CD",
+    "priority": "High",
+    "created_date": "2024-12-16",
+    "resolved_date": "2024-12-16"
+  },
+  {
+    "ticket_id": "TICK-174",
+    "title": "Storage costs rising from old object versions",
+    "description": "Object storage bill growing despite stable data volume. Detected by synthetic monitoring.",
+    "resolution": "Bucket versioning enabled without lifecycle rules, keeping all noncurrent versions. Added lifecycle policy to transition noncurrent versions to archive tier after 30 days and expire after 180 days. Runbook updated with diagnosis and remediation steps.",
+    "category": "Storage",
+    "priority": "Low",
+    "created_date": "2024-12-19",
+    "resolved_date": "2024-12-23"
+  },
+  {
+    "ticket_id": "TICK-175",
+    "title": "Search cluster out of heap memory",
+    "description": "Search nodes crashing with OutOfMemoryError during peak traffic. Raised by an enterprise customer through account manager.",
+    "resolution": "Aggregations on high-cardinality text fields loaded fielddata into heap. Switched aggregations to keyword fields with doc_values, set circuit breaker limits, and added dedicated coordinating nodes. Postmortem published and action items tracked.",
+    "category": "Search",
+    "priority": "High",
+    "created_date": "2024-12-22",
+    "resolved_date": "2024-12-22"
+  },
+  {
+    "ticket_id": "TICK-176",
+    "title": "CDN serving stale content after deploy",
+    "description": "Users see old version of web app after release. Some users get mixed old HTML with new JS, causing errors. Detected by synthetic monitoring.",
+    "resolution": "index.html was cached at CDN for 24 hours. Set Cache-Control no-cache for HTML, content-hashed filenames for static assets with long TTL, and added CDN purge step to deployment pipeline. Runbook updated with diagnosis and remediation steps.",
+    "category": "Frontend",
+    "priority": "High",
+    "created_date": "2024-12-24",
+    "resolved_date": "2024-12-25"
+  },
+  {
+    "ticket_id": "TICK-177",
+    "title": "Deep links opening browser instead of app",
+    "description": "Universal links from marketing emails open in Safari instead of the installed app. First reported on the community forum.",
+    "resolution": "apple-app-site-association file was served with redirect and wrong content-type after CDN change. Served file directly with application/json, removed redirect, and verified with Apple's validation tool. Knowledge base article created for support team.",
+    "category": "Mobile",
+    "priority": "Medium",
+    "created_date": "2024-12-27",
+    "resolved_date": "2024-12-30"
+  },
+  {
+    "ticket_id": "TICK-178",
+    "title": "Failover took 8 minutes instead of seconds",
+    "description": "During planned maintenance, primary database failover to standby in westeurope caused 8 minutes of downtime. Expected failover time under 60 seconds.",
+    "resolution": "Application cached the database IP address at startup and ignored the DNS change. Configured connection strings to use the cluster endpoint, reduced DNS TTL, and set JVM DNS cache to 30 seconds. Added quarterly failover drills. Runbook updated with diagnosis and remediation steps.",
+    "category": "Database",
+    "priority": "High",
+    "created_date": "2024-12-30",
+    "resolved_date": "2024-12-31"
+  },
+  {
+    "ticket_id": "TICK-179",
+    "title": "Uploaded files corrupted in storage",
+    "description": "Some uploaded PDFs cannot be opened after download.",
+    "resolution": "Multipart upload parts were assembled out of order on network retry. Switched to SDK managed multipart upload with checksum validation (MD5/CRC32C) on each part and on final object. Runbook updated with diagnosis and remediation steps.",
+    "category": "File Upload",
+    "priority": "High",
+    "created_date": "2025-01-02",
+    "resolved_date": "2025-01-03"
+  },
+  {
+    "ticket_id": "TICK-180",
+    "title": "NoSQL throttling errors on hot partition",
+    "description": "order-service receiving ProvisionedThroughputExceeded / 429 errors although overall consumed capacity is below provisioned limit. Flagged during weekly operations review.",
+    "resolution": "Partition key based on date caused all writes for the day to land on a single partition. Redesigned key to include a hashed suffix for write sharding and enabled adaptive capacity. Updated access patterns documentation. Shared learnings in engineering all-hands.",
+    "category": "Database",
+    "priority": "High",
+    "created_date": "2025-01-04",
+    "resolved_date": "2025-01-04"
+  },
+  {
+    "ticket_id": "TICK-181",
+    "title": "Search cluster out of heap memory",
+    "description": "Search nodes crashing with OutOfMemoryError during peak traffic.",
+    "resolution": "Aggregations on high-cardinality text fields loaded fielddata into heap. Switched aggregations to keyword fields with doc_values, set circuit breaker limits, and added dedicated coordinating nodes. Added regression test to prevent recurrence.",
+    "category": "Search",
+    "priority": "High",
+    "created_date": "2025-01-06",
+    "resolved_date": "2025-01-06"
+  },
+  {
+    "ticket_id": "TICK-182",
+    "title": "Screen reader cannot navigate forms",
+    "description": "Accessibility audit: form fields not announced correctly to screen reader users. Noticed during on-call shift handover.",
+    "resolution": "Inputs lacked associated labels and error messages were not linked. Added label/for associations, aria-describedby for errors, focus management, and automated accessibility tests (axe) in CI. Shared learnings in engineering all-hands.",
+    "category": "Accessibility",
+    "priority": "Medium",
+    "created_date": "2025-01-07",
+    "resolved_date": "2025-01-09"
+  },
+  {
+    "ticket_id": "TICK-183",
+    "title": "TLS handshake failures from legacy clients",
+    "description": "Some enterprise customers' integrations failing with 'handshake failure' after load balancer security policy update. Raised by an enterprise customer through account manager.",
+    "resolution": "New policy disabled TLS 1.0/1.1 and older cipher suites. Identified affected customers via TLS logs, provided a temporary legacy endpoint with sunset date, and communicated migration requirements. Postmortem published and action items tracked.",
+    "category": "SSL/TLS",
+    "priority": "High",
+    "created_date": "2025-01-08",
+    "resolved_date": "2025-01-09"
+  },
+  {
+    "ticket_id": "TICK-184",
+    "title": "Alert fatigue causing missed incidents",
+    "description": "On-call engineers receiving 200+ alerts per week, mostly noise. A real disk alert was ignored. Noticed during on-call shift handover.",
+    "resolution": "Alerts were threshold-based on symptoms of minor fluctuations. Reworked alerting around SLOs and burn rates, removed non-actionable alerts, and added runbook links to every alert. Added regression test to prevent recurrence.",
+    "category": "Monitoring",
+    "priority": "Medium",
+    "created_date": "2025-01-09",
+    "resolved_date": "2025-01-12"
+  },
+  {
+    "ticket_id": "TICK-185",
+    "title": "Logs missing timestamps in correct timezone",
+    "description": "Incident investigation hampered because logs from different services use different timezones. First reported on the community forum.",
+    "resolution": "Services used host-local time with inconsistent formats. Standardized structured JSON logging with ISO-8601 UTC timestamps and correlation IDs across all services.",
+    "category": "Monitoring",
+    "priority": "Low",
+    "created_date": "2025-01-10",
+    "resolved_date": "2025-01-17"
+  },
+  {
+    "ticket_id": "TICK-186",
+    "title": "Outbound calls failing due to SNAT port exhaustion",
+    "description": "billing-api intermittently failing to call third-party APIs with connection timeouts under load. Reported by the support team via escalation.",
+    "resolution": "All outbound traffic shared a few public IPs, exhausting SNAT ports. Deployed NAT gateway with multiple IPs, enabled HTTP connection pooling and reuse in the client. Runbook updated with diagnosis and remediation steps.",
+    "category": "Networking",
+    "priority": "High",
+    "created_date": "2025-01-13",
+    "resolved_date": "2025-01-15"
+  },
+  {
+    "ticket_id": "TICK-187",
+    "title": "Usage-based billing overcounting API calls",
+    "description": "Customers disputing bills showing API usage 2x higher than their own logs. Flagged during weekly operations review.",
+    "resolution": "Retried requests at the load balancer were metered twice. Moved metering to application layer after request completion, deduplicated by request ID, and issued credits to affected accounts. Runbook updated with diagnosis and remediation steps.",
+    "category": "Billing",
+    "priority": "High",
+    "created_date": "2025-01-16",
+    "resolved_date": "2025-01-17"
+  },
+  {
+    "ticket_id": "TICK-188",
+    "title": "Bulk user import failing for large files",
+    "description": "Admins unable to import CSV with more than 5,000 users; request times out. Detected by synthetic monitoring.",
+    "resolution": "Import processed synchronously in request. Moved to background job with progress tracking, chunked processing, and per-row validation error report.",
+    "category": "User Management",
+    "priority": "Medium",
+    "created_date": "2025-01-19",
+    "resolved_date": "2025-01-22"
+  },
+  {
+    "ticket_id": "TICK-189",
+    "title": "Large API responses timing out",
+    "description": "GET /api/reports endpoint timing out after 30 seconds for large accounts.",
+    "resolution": "Endpoint built entire result set in memory. Implemented streaming response, mandatory pagination, gzip compression, and async export job for very large datasets. Added regression test to prevent recurrence.",
+    "category": "API",
+    "priority": "Medium",
+    "created_date": "2025-01-20",
+    "resolved_date": "2025-01-21"
+  },
+  {
+    "ticket_id": "TICK-190",
+    "title": "Unexpected 3x increase in cloud bill",
+    "description": "Monthly cloud cost tripled compared to previous month. No new services launched intentionally.",
+    "resolution": "Cost analysis found a test environment with large GPU instances left running and NAT gateway data processing from a misrouted backup job. Terminated idle resources, routed backups via private endpoint, and added budget alerts and auto-shutdown tags for non-prod. Postmortem published and action items tracked.",
+    "category": "Cloud Infrastructure",
+    "priority": "High",
+    "created_date": "2025-01-23",
+    "resolved_date": "2025-01-24"
+  },
+  {
+    "ticket_id": "TICK-191",
+    "title": "Container memory limit causing OOMKills",
+    "description": "Pods for billing-api restarting several times per hour with OOMKilled status. No obvious memory leak in application metrics. Reported by the support team via escalation.",
+    "resolution": "JVM was not container-aware and sized heap from host memory. Set -XX:MaxRAMPercentage=75, aligned requests and limits, and added memory usage dashboards per pod. Knowledge base article created for support team.",
+    "category": "Kubernetes",
+    "priority": "High",
+    "created_date": "2025-01-24",
+    "resolved_date": "2025-01-25"
+  },
+  {
+    "ticket_id": "TICK-192",
+    "title": "Conditional Access blocking service principal",
+    "description": "Automated deployment pipeline failing with AADSTS53003 when acquiring token. Pipeline worked until a new Conditional Access policy was enabled tenant-wide. Reported by the support team via escalation.",
+    "resolution": "New Conditional Access policy targeted 'All cloud apps' without excluding workload identities. Scoped policy to user identities only and created a separate workload identity policy restricting service principal sign-ins to known IP ranges.",
+    "category": "Identity",
+    "priority": "Critical",
+    "created_date": "2025-01-25",
+    "resolved_date": "2025-01-25"
+  },
+  {
+    "ticket_id": "TICK-193",
+    "title": "Excel export truncating leading zeros",
+    "description": "Exported ZIP codes and product codes lose leading zeros when opened in Excel. Raised by an enterprise customer through account manager.",
+    "resolution": "Values exported as plain CSV were interpreted as numbers by Excel. Added native XLSX export with text-formatted columns and documented CSV import guidance. Knowledge base article created for support team.",
+    "category": "Export",
+    "priority": "Low",
+    "created_date": "2025-01-26",
+    "resolved_date": "2025-02-02"
+  },
+  {
+    "ticket_id": "TICK-194",
+    "title": "Password reset links expired on arrival",
+    "description": "Users clicking password reset links immediately receive 'link expired' message. Reset email arrives within seconds of request. Raised by an enterprise customer through account manager.",
+    "resolution": "Corporate email security scanners were pre-fetching links, consuming the single-use token. Changed reset flow so the link opens a confirmation page and the token is consumed only on form submit. Added token reuse detection logging. Knowledge base article created for support team.",
+    "category": "Authentication",
+    "priority": "High",
+    "created_date": "2025-01-29",
+    "resolved_date": "2025-01-29"
+  },
+  {
+    "ticket_id": "TICK-195",
+    "title": "Latency spikes every hour on the hour",
+    "description": "p99 latency for user-service spikes to 4 seconds at the top of every hour for about 2 minutes. Flagged during weekly operations review.",
+    "resolution": "Hourly cron jobs from multiple teams all ran at :00, saturating shared database and cache. Spread schedules with jitter, moved heavy jobs to a dedicated worker pool, and added a shared scheduling calendar. Added regression test to prevent recurrence.",
+    "category": "Performance",
+    "priority": "Medium",
+    "created_date": "2025-01-31",
+    "resolved_date": "2025-02-02"
+  },
+  {
+    "ticket_id": "TICK-196",
+    "title": "Android app crashes on devices with Android 14",
+    "description": "Crash rate jumped to 8% after Android 14 rollout. Crash logs show SecurityException for foreground service type.",
+    "resolution": "Android 14 requires declaring foregroundServiceType for foreground services. Added type declarations and required permissions to manifest, updated targetSdk, and released hotfix build via staged rollout. Shared learnings in engineering all-hands.",
+    "category": "Mobile",
+    "priority": "Critical",
+    "created_date": "2025-02-02",
+    "resolved_date": "2025-02-02"
+  },
+  {
+    "ticket_id": "TICK-197",
+    "title": "CDN serving stale content after deploy",
+    "description": "Users see old version of web app after release. Some users get mixed old HTML with new JS, causing errors. Raised by an enterprise customer through account manager.",
+    "resolution": "index.html was cached at CDN for 24 hours. Set Cache-Control no-cache for HTML, content-hashed filenames for static assets with long TTL, and added CDN purge step to deployment pipeline. Postmortem published and action items tracked.",
+    "category": "Frontend",
+    "priority": "High",
+    "created_date": "2025-02-03",
+    "resolved_date": "2025-02-03"
+  },
+  {
+    "ticket_id": "TICK-198",
+    "title": "Users seeing other users' data",
+    "description": "Two customers reported seeing another customer's account dashboard briefly. Flagged during weekly operations review.",
+    "resolution": "CDN cached personalized API responses because Cache-Control was missing on authenticated endpoints. Purged CDN, set Cache-Control: private, no-store on authenticated responses, and added cache key review in security checklist. Notified affected users per policy. Added regression test to prevent recurrence.",
+    "category": "Security",
+    "priority": "Critical",
+    "created_date": "2025-02-05",
+    "resolved_date": "2025-02-05"
+  },
+  {
+    "ticket_id": "TICK-199",
+    "title": "Alerts not firing during outage",
+    "description": "45-minute outage of order-service detected by customers, not by monitoring. No alerts received. Flagged during weekly operations review.",
+    "resolution": "Alert routed to a deactivated on-call channel after team reorganization, and alert relied on metric that stopped reporting (absence not detected). Fixed routing, added absent-data alerts, and introduced synthetic availability checks. Postmortem published and action items tracked.",
+    "category": "Monitoring",
+    "priority": "Critical",
+    "created_date": "2025-02-08",
+    "resolved_date": "2025-02-08"
+  },
+  {
+    "ticket_id": "TICK-200",
+    "title": "Battery drain complaints after update",
+    "description": "App store reviews mention severe battery drain after release v5.1.3. Analytics show background location requested continuously. Detected by synthetic monitoring.",
+    "resolution": "New feature used high-accuracy continuous location updates instead of significant-change monitoring. Switched to geofencing and significant location change APIs, and limited background refresh frequency. Shared learnings in engineering all-hands.",
+    "category": "Mobile",
+    "priority": "Medium",
+    "created_date": "2025-02-11",
+    "resolved_date": "2025-02-14"
+  },
+  {
+    "ticket_id": "TICK-201",
+    "title": "ETL job producing duplicate rows in warehouse",
+    "description": "Daily revenue dashboard shows doubled figures for one day. First reported on the community forum.",
+    "resolution": "ETL job was retried after partial failure and appended data again. Made loads idempotent using MERGE on natural keys and partition overwrite per load date. Postmortem published and action items tracked.",
+    "category": "Data Pipeline",
+    "priority": "High",
+    "created_date": "2025-02-14",
+    "resolved_date": "2025-02-15"
+  },
+  {
+    "ticket_id": "TICK-202",
+    "title": "VM backups failing silently",
+    "description": "Restore test revealed last successful VM backup was 23 days ago. Backup job dashboard showed green. First reported on the community forum.",
+    "resolution": "Backup agent failed after OS patch but job reported 'completed with warnings', which was treated as success. Updated agent, changed alerting to treat warnings as failures, and implemented monthly automated restore tests. Knowledge base article created for support team.",
+    "category": "Backup & Recovery",
+    "priority": "Critical",
+    "created_date": "2025-02-17",
+    "resolved_date": "2025-02-17"
+  },
+  {
+    "ticket_id": "TICK-203",
+    "title": "Environment variables mismatched between environments",
+    "description": "Staging works but production fails with null reference error on startup. Noticed during on-call shift handover.",
+    "resolution": "New required config key added to staging but not production. Introduced config schema validation at startup that fails fast with clear error, and centralized configuration management per environment. Shared learnings in engineering all-hands.",
+    "category": "Configuration",
+    "priority": "Medium",
+    "created_date": "2025-02-19",
+    "resolved_date": "2025-02-21"
+  },
+  {
+    "ticket_id": "TICK-204",
+    "title": "Deep links opening browser instead of app",
+    "description": "Universal links from marketing emails open in Safari instead of the installed app. Flagged during weekly operations review.",
+    "resolution": "apple-app-site-association file was served with redirect and wrong content-type after CDN change. Served file directly with application/json, removed redirect, and verified with Apple's validation tool. Added regression test to prevent recurrence.",
+    "category": "Mobile",
+    "priority": "Medium",
+    "created_date": "2025-02-20",
+    "resolved_date": "2025-02-21"
+  },
+  {
+    "ticket_id": "TICK-205",
+    "title": "VPN tunnel to on-premises dropping",
+    "description": "Site-to-site VPN between us-east-1 and data center disconnects several times per day, interrupting batch jobs. Reported by the support team via escalation.",
+    "resolution": "IKE phase 2 lifetime mismatch between cloud gateway and on-prem firewall caused failed rekeys. Aligned IPsec/IKE parameters, enabled dead peer detection, and deployed redundant tunnel in active-active mode.",
+    "category": "Networking",
+    "priority": "High",
+    "created_date": "2025-02-21",
+    "resolved_date": "2025-02-22"
+  },
+  {
+    "ticket_id": "TICK-206",
+    "title": "3D Secure challenge not displaying",
+    "description": "European customers unable to complete checkout. 3DS authentication popup never appears and payment times out after 10 minutes.",
+    "resolution": "Content Security Policy update blocked the issuer's challenge iframe. Added required frame-src domains to CSP and implemented fallback redirect flow. Added synthetic checkout test with 3DS test cards. Runbook updated with diagnosis and remediation steps.",
+    "category": "Payment",
+    "priority": "Critical",
+    "created_date": "2025-02-23",
+    "resolved_date": "2025-02-24"
+  },
+  {
+    "ticket_id": "TICK-207",
+    "title": "Webhook signature validation rejecting valid events",
+    "description": "Incoming webhooks from payment provider rejected with 'invalid signature'.",
+    "resolution": "Body-parsing middleware modified raw request body before signature verification. Preserved raw body for webhook route and used constant-time comparison for HMAC check. Runbook updated with diagnosis and remediation steps.",
+    "category": "Integration",
+    "priority": "High",
+    "created_date": "2025-02-24",
+    "resolved_date": "2025-02-25"
+  },
+  {
+    "ticket_id": "TICK-208",
+    "title": "Rollback failed due to database migration",
+    "description": "Attempted rollback of order-service after errors, but previous version crashed due to new database schema.",
+    "resolution": "Migration dropped a column the old version still used. Adopted expand-and-contract migration pattern, decoupled schema changes from app deploys, and added rollback compatibility test in pipeline. Shared learnings in engineering all-hands.",
+    "category": "CI/CD",
+    "priority": "High",
+    "created_date": "2025-02-27",
+    "resolved_date": "2025-02-28"
+  },
+  {
+    "ticket_id": "TICK-209",
+    "title": "Kerberos authentication failing on new servers",
+    "description": "Newly provisioned application servers cannot authenticate users via Kerberos. Error 'KRB_AP_ERR_MODIFIED' in logs. Older servers in the same pool work fine.",
+    "resolution": "New servers were missing SPN registration for the service account and DNS reverse lookup records. Registered SPNs, added PTR records, and added both steps to the server provisioning automation. Added regression test to prevent recurrence.",
+    "category": "Authentication",
+    "priority": "High",
+    "created_date": "2025-02-28",
+    "resolved_date": "2025-02-28"
+  },
+  {
+    "ticket_id": "TICK-210",
+    "title": "Log ingestion costs exploded",
+    "description": "Logging platform costs increased 5x in one month. Ingestion volume at 2TB/day. Flagged during weekly operations review.",
+    "resolution": "Debug logging left enabled in production for catalog-api after an incident. Reverted log level, implemented dynamic log levels, sampled high-volume info logs, and set daily ingestion caps with alerts. Shared learnings in engineering all-hands.",
+    "category": "Monitoring",
+    "priority": "High",
+    "created_date": "2025-03-01",
+    "resolved_date": "2025-03-02"
+  },
+  {
+    "ticket_id": "TICK-211",
+    "title": "Redis memory full, evicting session data",
+    "description": "Users randomly logged out. Redis shows evicted_keys increasing and memory at maxmemory. Noticed during on-call shift handover.",
+    "resolution": "Sessions and cache shared one Redis instance with allkeys-lru policy. Separated sessions into a dedicated instance with noeviction policy, set TTLs on all cache keys, and scaled memory. Shared learnings in engineering all-hands.",
+    "category": "Caching",
+    "priority": "High",
+    "created_date": "2025-03-02",
+    "resolved_date": "2025-03-02"
+  },
+  {
+    "ticket_id": "TICK-212",
+    "title": "Kafka consumer lag growing continuously",
+    "description": "Consumer group for shipping-service lagging by millions of messages. Downstream data hours behind. Raised by an enterprise customer through account manager.",
+    "resolution": "Topic had 6 partitions limiting parallelism to 6 consumers, and consumers committed offsets synchronously per message. Increased partitions to 24, scaled consumers, and switched to batch processing with async commits.",
+    "category": "Messaging",
+    "priority": "High",
+    "created_date": "2025-03-03",
+    "resolved_date": "2025-03-04"
+  },
+  {
+    "ticket_id": "TICK-213",
+    "title": "Battery drain complaints after update",
+    "description": "App store reviews mention severe battery drain after release v3.1. Analytics show background location requested continuously. Flagged during weekly operations review.",
+    "resolution": "New feature used high-accuracy continuous location updates instead of significant-change monitoring. Switched to geofencing and significant location change APIs, and limited background refresh frequency. Shared learnings in engineering all-hands.",
+    "category": "Mobile",
+    "priority": "Medium",
+    "created_date": "2025-03-05",
+    "resolved_date": "2025-03-07"
+  },
+  {
+    "ticket_id": "TICK-214",
+    "title": "Logs missing timestamps in correct timezone",
+    "description": "Incident investigation hampered because logs from different services use different timezones. First reported on the community forum.",
+    "resolution": "Services used host-local time with inconsistent formats. Standardized structured JSON logging with ISO-8601 UTC timestamps and correlation IDs across all services. Shared learnings in engineering all-hands.",
+    "category": "Monitoring",
+    "priority": "Low",
+    "created_date": "2025-03-06",
+    "resolved_date": "2025-03-08"
+  },
+  {
+    "ticket_id": "TICK-215",
+    "title": "Currency conversion using stale exchange rates",
+    "description": "International customers charged amounts based on exchange rates from two weeks ago. Finance noticed margin discrepancies.",
+    "resolution": "Exchange rate fetch job failed silently after the provider rotated API credentials. Updated credentials in secrets vault, added staleness check that blocks checkout in affected currencies if rates are older than 24 hours, and alerting on job failure. Postmortem published and action items tracked.",
+    "category": "Payment",
+    "priority": "High",
+    "created_date": "2025-03-07",
+    "resolved_date": "2025-03-07"
+  },
+  {
+    "ticket_id": "TICK-216",
+    "title": "Horizontal Pod Autoscaler not scaling",
+    "description": "During traffic surge auth-gateway stayed at 2 replicas while CPU was at 100%. HPA shows '<unknown>' for current metrics. First reported on the community forum.",
+    "resolution": "Metrics server was not deployed after cluster upgrade, and pods lacked CPU requests. Reinstalled metrics-server, defined resource requests for all containers, and added a cluster readiness checklist after upgrades.",
+    "category": "Kubernetes",
+    "priority": "Critical",
+    "created_date": "2025-03-08",
+    "resolved_date": "2025-03-08"
+  },
+  {
+    "ticket_id": "TICK-217",
+    "title": "Cluster upgrade broke ingress",
+    "description": "After upgrading Kubernetes to a new minor version, all external traffic returned 404. Ingress resources still present. Detected by synthetic monitoring.",
+    "resolution": "Upgrade removed a deprecated Ingress API version and the ingress controller version was incompatible. Upgraded ingress controller, migrated manifests to networking.k8s.io/v1 with ingressClassName, and added deprecated API scanning to CI.",
+    "category": "Kubernetes",
+    "priority": "Critical",
+    "created_date": "2025-03-11",
+    "resolved_date": "2025-03-11"
+  },
+  {
+    "ticket_id": "TICK-218",
+    "title": "Duplicate charges on customer cards",
+    "description": "Several customers charged twice for a single order. Payment gateway dashboard shows two successful captures within seconds. Noticed during on-call shift handover.",
+    "resolution": "Webhook handler and synchronous checkout flow both triggered capture on authorization success. Made capture idempotent using gateway idempotency key and order state machine. Refunded affected customers. Added regression test to prevent recurrence.",
+    "category": "Payment",
+    "priority": "Critical",
+    "created_date": "2025-03-13",
+    "resolved_date": "2025-03-13"
+  },
+  {
+    "ticket_id": "TICK-219",
+    "title": "Service unreachable after network policy change",
+    "description": "Frontend pods unable to reach notification-service after security team applied default-deny network policies. Connection timeouts. Raised by an enterprise customer through account manager.",
+    "resolution": "Default-deny policy blocked egress including DNS to kube-dns. Added explicit allow policies for DNS egress and frontend-to-backend traffic, and introduced policy testing in staging with a connectivity matrix.",
+    "category": "Kubernetes",
+    "priority": "High",
+    "created_date": "2025-03-16",
+    "resolved_date": "2025-03-17"
+  },
+  {
+    "ticket_id": "TICK-220",
+    "title": "Alerts not firing during outage",
+    "description": "45-minute outage of inventory-service detected by customers, not by monitoring. No alerts received. Detected by synthetic monitoring.",
+    "resolution": "Alert routed to a deactivated on-call channel after team reorganization, and alert relied on metric that stopped reporting (absence not detected). Fixed routing, added absent-data alerts, and introduced synthetic availability checks. Added regression test to prevent recurrence.",
+    "category": "Monitoring",
+    "priority": "Critical",
+    "created_date": "2025-03-19",
+    "resolved_date": "2025-03-19"
+  },
+  {
+    "ticket_id": "TICK-221",
+    "title": "Object storage bucket publicly accessible",
+    "description": "Security posture scan flagged a storage bucket containing customer exports as publicly readable. Raised by an enterprise customer through account manager.",
+    "resolution": "Bucket policy had been modified for a temporary partner share and never reverted. Removed public access, enabled account-level block public access, switched partner sharing to time-limited signed URLs, and reviewed access logs. Added regression test to prevent recurrence.",
+    "category": "Security",
+    "priority": "Critical",
+    "created_date": "2025-03-21",
+    "resolved_date": "2025-03-22"
+  },
+  {
+    "ticket_id": "TICK-222",
+    "title": "Expired TLS certificate on internal service",
+    "description": "Service-to-service calls to notification-service failing with certificate errors.",
+    "resolution": "Internal certificates issued manually with 1-year validity. Deployed internal certificate automation (cert-manager) with short-lived certificates and automatic rotation. Runbook updated with diagnosis and remediation steps.",
+    "category": "SSL/TLS",
+    "priority": "High",
+    "created_date": "2025-03-24",
+    "resolved_date": "2025-03-26"
+  },
+  {
+    "ticket_id": "TICK-223",
+    "title": "Shared file system latency spikes",
+    "description": "Applications using network file share experiencing multi-second I/O waits. Noticed during on-call shift handover.",
+    "resolution": "File share burst credits exhausted due to sustained throughput. Moved to provisioned throughput tier, and moved temp files and caches to local SSD. Shared learnings in engineering all-hands.",
+    "category": "Storage",
+    "priority": "Medium",
+    "created_date": "2025-03-27",
+    "resolved_date": "2025-03-29"
+  },
+  {
+    "ticket_id": "TICK-224",
+    "title": "Migration locked production table for 20 minutes",
+    "description": "Schema migration in release v4.0 added a column with default value and locked the orders table. All writes blocked; site effectively down during migration. Raised by an enterprise customer through account manager.",
+    "resolution": "Migration rewrote the full table on the database engine version in use. Rolled forward by letting migration complete, then adopted online schema change tooling. Added CI check that flags blocking DDL on large tables. Added regression test to prevent recurrence.",
+    "category": "Database",
+    "priority": "Critical",
+    "created_date": "2025-03-28",
+    "resolved_date": "2025-03-29"
+  },
+  {
+    "ticket_id": "TICK-225",
+    "title": "Push notifications not received on iOS",
+    "description": "iOS users stopped receiving push notifications. Android unaffected. Notification service logs show successful sends. Detected by synthetic monitoring.",
+    "resolution": "APNs authentication certificate expired. Migrated from certificate-based to token-based (.p8) APNs authentication which does not expire annually. Added expiry monitoring for all signing credentials. Knowledge base article created for support team.",
+    "category": "Mobile",
+    "priority": "High",
+    "created_date": "2025-03-31",
+    "resolved_date": "2025-04-01"
+  },
+  {
+    "ticket_id": "TICK-226",
+    "title": "Notification emails sent to wrong users",
+    "description": "A batch of order confirmation emails sent to incorrect recipients. Raised by an enterprise customer through account manager.",
+    "resolution": "Race condition in batch job reused a shared mutable recipient object across threads. Refactored to immutable per-message payloads, added recipient/order consistency check before send, and notified affected users. Shared learnings in engineering all-hands.",
+    "category": "Notifications",
+    "priority": "Critical",
+    "created_date": "2025-04-03",
+    "resolved_date": "2025-04-03"
+  },
+  {
+    "ticket_id": "TICK-227",
+    "title": "Page load slow due to large JavaScript bundle",
+    "description": "Home page Largest Contentful Paint over 6 seconds on mobile. Lighthouse reports 4MB of JavaScript. Detected by synthetic monitoring.",
+    "resolution": "Entire charting and date libraries were bundled into the main chunk. Implemented route-based code splitting, replaced moment.js with a lighter library, and enabled tree shaking. Main bundle reduced to 380KB; LCP now 2.1s. Postmortem published and action items tracked.",
+    "category": "Frontend",
+    "priority": "Medium",
+    "created_date": "2025-04-04",
+    "resolved_date": "2025-04-06"
+  },
+  {
+    "ticket_id": "TICK-228",
+    "title": "SFTP partner file transfer failing",
+    "description": "Daily file from logistics partner not being processed. SFTP job reports 'host key verification failed'. First reported on the community forum.",
+    "resolution": "Partner rotated SFTP server host key without notice. Verified new fingerprint with partner out-of-band, updated known_hosts, and added alerting for missing daily file by 06:00. Shared learnings in engineering all-hands.",
+    "category": "Integration",
+    "priority": "Medium",
+    "created_date": "2025-04-06",
+    "resolved_date": "2025-04-08"
+  },
+  {
+    "ticket_id": "TICK-229",
+    "title": "Push notifications not received on iOS",
+    "description": "iOS users stopped receiving push notifications. Android unaffected. Notification service logs show successful sends. First reported on the community forum.",
+    "resolution": "APNs authentication certificate expired. Migrated from certificate-based to token-based (.p8) APNs authentication which does not expire annually. Added expiry monitoring for all signing credentials. Added regression test to prevent recurrence.",
+    "category": "Mobile",
+    "priority": "High",
+    "created_date": "2025-04-07",
+    "resolved_date": "2025-04-08"
+  },
+  {
+    "ticket_id": "TICK-230",
+    "title": "Distributed traces missing spans",
+    "description": "Traces for checkout requests show gaps; downstream service spans not linked. First reported on the community forum.",
+    "resolution": "Message queue consumers did not propagate trace context headers. Added W3C traceparent propagation in producer/consumer middleware via OpenTelemetry instrumentation.",
+    "category": "Monitoring",
+    "priority": "Low",
+    "created_date": "2025-04-08",
+    "resolved_date": "2025-04-12"
+  },
+  {
+    "ticket_id": "TICK-231",
+    "title": "New products not appearing in search",
+    "description": "Products added in admin take hours to appear in search results. Noticed during on-call shift handover.",
+    "resolution": "Indexing was batch-driven every 6 hours. Implemented change data capture to stream product updates to search index within seconds and added indexing lag monitoring. Postmortem published and action items tracked.",
+    "category": "Search",
+    "priority": "Medium",
+    "created_date": "2025-04-10",
+    "resolved_date": "2025-04-12"
+  },
+  {
+    "ticket_id": "TICK-232",
+    "title": "API keys leaked in public repository",
+    "description": "Security scanner alerted that production API keys for billing-api were committed to a public GitHub repository. Keys were exposed for approximately 6 hours. First reported on the community forum.",
+    "resolution": "Revoked and rotated all exposed keys immediately. Reviewed access logs for misuse and found none. Moved secrets to a managed secrets vault, enabled push protection and secret scanning on all repositories, and added pre-commit hooks. Added regression test to prevent recurrence.",
+    "category": "Security",
+    "priority": "Critical",
+    "created_date": "2025-04-12",
+    "resolved_date": "2025-04-12"
+  },
+  {
+    "ticket_id": "TICK-233",
+    "title": "Messages processed more than once",
+    "description": "Customers receiving duplicate shipment notifications. Detected by synthetic monitoring.",
+    "resolution": "Consumer crashed after processing but before acknowledging, causing redelivery under at-least-once semantics. Made consumers idempotent using processed-message ID store and deduplication window.",
+    "category": "Messaging",
+    "priority": "Medium",
+    "created_date": "2025-04-13",
+    "resolved_date": "2025-04-14"
+  },
+  {
+    "ticket_id": "TICK-234",
+    "title": "Refunds stuck in pending state",
+    "description": "Refunds initiated by support remain 'pending' for over a week. Gateway shows refunds as completed. Noticed during on-call shift handover.",
+    "resolution": "Gateway webhook for refund.succeeded events was not subscribed after migrating to a new webhook endpoint. Subscribed missing event types, backfilled refund statuses via gateway API, and added webhook event coverage test. Knowledge base article created for support team.",
+    "category": "Payment",
+    "priority": "High",
+    "created_date": "2025-04-14",
+    "resolved_date": "2025-04-16"
+  },
+  {
+    "ticket_id": "TICK-235",
+    "title": "Firewall rule change blocked payment provider callbacks",
+    "description": "Payment confirmation webhooks stopped arriving after network security group cleanup. Flagged during weekly operations review.",
+    "resolution": "Cleanup removed allow rule for payment provider IP ranges. Restored rule using provider's published IP list via automation, and added synthetic webhook check every 5 minutes. Postmortem published and action items tracked.",
+    "category": "Networking",
+    "priority": "Critical",
+    "created_date": "2025-04-15",
+    "resolved_date": "2025-04-16"
+  },
+  {
+    "ticket_id": "TICK-236",
+    "title": "Service unreachable after network policy change",
+    "description": "Frontend pods unable to reach shipping-service after security team applied default-deny network policies. Connection timeouts. First reported on the community forum.",
+    "resolution": "Default-deny policy blocked egress including DNS to kube-dns. Added explicit allow policies for DNS egress and frontend-to-backend traffic, and introduced policy testing in staging with a connectivity matrix. Added regression test to prevent recurrence.",
+    "category": "Kubernetes",
+    "priority": "High",
+    "created_date": "2025-04-16",
+    "resolved_date": "2025-04-17"
+  },
+  {
+    "ticket_id": "TICK-237",
+    "title": "Pipeline secrets exposed in build logs",
+    "description": "Database connection string visible in plain text in CI logs accessible to all developers. First reported on the community forum.",
+    "resolution": "Script echoed environment variables in debug mode. Rotated credentials, masked secrets in pipeline settings, removed debug echo, and restricted log access. Added log scanning for secret patterns. Added regression test to prevent recurrence.",
+    "category": "Security",
+    "priority": "High",
+    "created_date": "2025-04-17",
+    "resolved_date": "2025-04-18"
+  },
+  {
+    "ticket_id": "TICK-238",
+    "title": "Container image vulnerability scan blocking release",
+    "description": "Release blocked by security gate: base image has critical OpenSSL CVE.",
+    "resolution": "Base image was pinned to an old tag. Rebuilt on patched minimal base image, set up automated base-image update PRs, and enabled nightly rescans of running images. Knowledge base article created for support team.",
+    "category": "Security",
+    "priority": "High",
+    "created_date": "2025-04-18",
+    "resolved_date": "2025-04-19"
+  },
+  {
+    "ticket_id": "TICK-239",
+    "title": "Streaming job checkpoint corruption",
+    "description": "Spark structured streaming job fails to restart after cluster maintenance with checkpoint errors. Reported by the support team via escalation.",
+    "resolution": "Code change altered stateful operator, making checkpoint incompatible. Restarted from new checkpoint with backfill from source offsets, and added checkpoint compatibility checks to deployment process. Shared learnings in engineering all-hands.",
+    "category": "Data Pipeline",
+    "priority": "High",
+    "created_date": "2025-04-21",
+    "resolved_date": "2025-04-23"
+  },
+  {
+    "ticket_id": "TICK-240",
+    "title": "Page load slow due to large JavaScript bundle",
+    "description": "Home page Largest Contentful Paint over 6 seconds on mobile. Lighthouse reports 4MB of JavaScript. Flagged during weekly operations review.",
+    "resolution": "Entire charting and date libraries were bundled into the main chunk. Implemented route-based code splitting, replaced moment.js with a lighter library, and enabled tree shaking. Main bundle reduced to 380KB; LCP now 2.1s. Postmortem published and action items tracked.",
+    "category": "Frontend",
+    "priority": "Medium",
+    "created_date": "2025-04-24",
+    "resolved_date": "2025-04-26"
+  },
+  {
+    "ticket_id": "TICK-241",
+    "title": "CORS errors blocking frontend API calls",
+    "description": "New frontend deployment on app subdomain failing all API calls with CORS errors in browser console.",
+    "resolution": "API CORS allow-list did not include new subdomain, and preflight responses were cached by CDN without Vary: Origin. Updated allow-list via configuration, added Vary header, and purged CDN cache. Shared learnings in engineering all-hands.",
+    "category": "API",
+    "priority": "High",
+    "created_date": "2025-04-27",
+    "resolved_date": "2025-04-28"
+  },
+  {
+    "ticket_id": "TICK-242",
+    "title": "Deadlocks in order processing during flash sale",
+    "description": "Database reporting frequent deadlock errors in inventory-service during high-traffic sale event. Approximately 15% of checkout transactions failing and requiring retry. Reported by the support team via escalation.",
+    "resolution": "Two code paths updated inventory and orders tables in opposite order. Standardized lock acquisition order across transactions, shortened transaction scope, and added automatic retry with jitter for deadlock victims.",
+    "category": "Database",
+    "priority": "Critical",
+    "created_date": "2025-04-29",
+    "resolved_date": "2025-04-30"
+  },
+  {
+    "ticket_id": "TICK-243",
+    "title": "Pods pending due to insufficient resources",
+    "description": "New pods remain in Pending state with 'Insufficient cpu' events. Cluster autoscaler not adding nodes. Flagged during weekly operations review.",
+    "resolution": "Node pool had reached its configured maximum node count and regional vCPU quota. Increased node pool max, requested quota increase, and right-sized over-provisioned CPU requests that were reserving 3x actual usage. Added regression test to prevent recurrence.",
+    "category": "Kubernetes",
+    "priority": "High",
+    "created_date": "2025-04-30",
+    "resolved_date": "2025-04-30"
+  },
+  {
+    "ticket_id": "TICK-244",
+    "title": "Duplicate records created on retry",
+    "description": "Customers receiving duplicate orders. Database contains identical rows created milliseconds apart. Correlates with client timeouts and retries. Noticed during on-call shift handover.",
+    "resolution": "API was not idempotent; client retries after timeout created new records. Introduced idempotency keys on create endpoints with a unique constraint, and returned the original response for repeated keys.",
+    "category": "Database",
+    "priority": "High",
+    "created_date": "2025-05-01",
+    "resolved_date": "2025-05-02"
+  },
+  {
+    "ticket_id": "TICK-245",
+    "title": "VPN tunnel to on-premises dropping",
+    "description": "Site-to-site VPN between ap-southeast-1 and data center disconnects several times per day, interrupting batch jobs. Flagged during weekly operations review.",
+    "resolution": "IKE phase 2 lifetime mismatch between cloud gateway and on-prem firewall caused failed rekeys. Aligned IPsec/IKE parameters, enabled dead peer detection, and deployed redundant tunnel in active-active mode. Shared learnings in engineering all-hands.",
+    "category": "Networking",
+    "priority": "High",
+    "created_date": "2025-05-03",
+    "resolved_date": "2025-05-04"
+  },
+  {
+    "ticket_id": "TICK-246",
+    "title": "Object storage bucket publicly accessible",
+    "description": "Security posture scan flagged a storage bucket containing customer exports as publicly readable.",
+    "resolution": "Bucket policy had been modified for a temporary partner share and never reverted. Removed public access, enabled account-level block public access, switched partner sharing to time-limited signed URLs, and reviewed access logs. Added regression test to prevent recurrence.",
+    "category": "Security",
+    "priority": "Critical",
+    "created_date": "2025-05-04",
+    "resolved_date": "2025-05-04"
+  },
+  {
+    "ticket_id": "TICK-247",
+    "title": "Breaking change in public API broke integrations",
+    "description": "Several partners report integration failures after release v4.0. Response field renamed from 'customer_id' to 'customerId'. Raised by an enterprise customer through account manager.",
+    "resolution": "Field rename shipped without versioning. Restored old field alongside new one, introduced API versioning policy with deprecation headers, and added contract tests against published OpenAPI spec. Added regression test to prevent recurrence.",
+    "category": "API",
+    "priority": "Critical",
+    "created_date": "2025-05-06",
+    "resolved_date": "2025-05-07"
+  },
+  {
+    "ticket_id": "TICK-248",
+    "title": "MFA prompts appearing on every login",
+    "description": "Users prompted for multi-factor authentication on every sign-in despite 'remember this device' being checked. Affects approximately 20% of users, mostly on Safari.",
+    "resolution": "Browser privacy settings were blocking the third-party persistence cookie. Moved remember-device cookie to first-party domain and set SameSite=Lax. Updated user guidance for browsers with strict tracking prevention. Postmortem published and action items tracked.",
+    "category": "Authentication",
+    "priority": "Medium",
+    "created_date": "2025-05-09",
+    "resolved_date": "2025-05-11"
+  },
+  {
+    "ticket_id": "TICK-249",
+    "title": "Cross-site scripting in user comments",
+    "description": "Bug bounty report: script tags in comments execute in other users' browsers. Flagged during weekly operations review.",
+    "resolution": "Comment rendering used innerHTML without sanitization. Switched to safe text rendering, added HTML sanitization library for rich text, and deployed strict Content Security Policy. Knowledge base article created for support team.",
+    "category": "Security",
+    "priority": "Critical",
+    "created_date": "2025-05-10",
+    "resolved_date": "2025-05-10"
+  },
+  {
+    "ticket_id": "TICK-250",
+    "title": "Offline sync conflicts overwriting user data",
+    "description": "Field technicians losing notes entered offline. After reconnecting, server data overwrites local changes. First reported on the community forum.",
+    "resolution": "Sync used last-write-wins with device clock timestamps, which were often skewed. Implemented server-issued version vectors with field-level merge and conflict UI for manual resolution. Knowledge base article created for support team.",
+    "category": "Mobile",
+    "priority": "High",
+    "created_date": "2025-05-11",
+    "resolved_date": "2025-05-11"
+  },
+  {
+    "ticket_id": "TICK-251",
+    "title": "Rollback failed due to database migration",
+    "description": "Attempted rollback of billing-api after errors, but previous version crashed due to new database schema. Detected by synthetic monitoring.",
+    "resolution": "Migration dropped a column the old version still used. Adopted expand-and-contract migration pattern, decoupled schema changes from app deploys, and added rollback compatibility test in pipeline. Postmortem published and action items tracked.",
+    "category": "CI/CD",
+    "priority": "High",
+    "created_date": "2025-05-14",
+    "resolved_date": "2025-05-15"
+  },
+  {
+    "ticket_id": "TICK-252",
+    "title": "Nodes running out of disk space",
+    "description": "Kubernetes nodes in eastus2 reporting DiskPressure, pods being evicted. Mostly affects long-running nodes. First reported on the community forum.",
+    "resolution": "Unused container images and container logs accumulated on nodes. Configured kubelet image garbage collection thresholds, log rotation, and moved to ephemeral OS disks with node auto-upgrade to recycle nodes regularly.",
+    "category": "Kubernetes",
+    "priority": "High",
+    "created_date": "2025-05-17",
+    "resolved_date": "2025-05-17"
+  },
+  {
+    "ticket_id": "TICK-253",
+    "title": "Bulk user import failing for large files",
+    "description": "Admins unable to import CSV with more than 5,000 users; request times out. Noticed during on-call shift handover.",
+    "resolution": "Import processed synchronously in request. Moved to background job with progress tracking, chunked processing, and per-row validation error report. Knowledge base article created for support team.",
+    "category": "User Management",
+    "priority": "Medium",
+    "created_date": "2025-05-19",
+    "resolved_date": "2025-05-20"
+  },
+  {
+    "ticket_id": "TICK-254",
+    "title": "Horizontal Pod Autoscaler not scaling",
+    "description": "During traffic surge shipping-service stayed at 2 replicas while CPU was at 100%. HPA shows '<unknown>' for current metrics. Raised by an enterprise customer through account manager.",
+    "resolution": "Metrics server was not deployed after cluster upgrade, and pods lacked CPU requests. Reinstalled metrics-server, defined resource requests for all containers, and added a cluster readiness checklist after upgrades. Shared learnings in engineering all-hands.",
+    "category": "Kubernetes",
+    "priority": "Critical",
+    "created_date": "2025-05-22",
+    "resolved_date": "2025-05-22"
+  },
+  {
+    "ticket_id": "TICK-255",
+    "title": "Migration locked production table for 20 minutes",
+    "description": "Schema migration in release v3.4.2 added a column with default value and locked the orders table. All writes blocked; site effectively down during migration. Noticed during on-call shift handover.",
+    "resolution": "Migration rewrote the full table on the database engine version in use. Rolled forward by letting migration complete, then adopted online schema change tooling. Added CI check that flags blocking DDL on large tables.",
+    "category": "Database",
+    "priority": "Critical",
+    "created_date": "2025-05-23",
+    "resolved_date": "2025-05-24"
+  },
+  {
+    "ticket_id": "TICK-256",
+    "title": "Pods pending due to insufficient resources",
+    "description": "New pods remain in Pending state with 'Insufficient cpu' events. Cluster autoscaler not adding nodes. First reported on the community forum.",
+    "resolution": "Node pool had reached its configured maximum node count and regional vCPU quota. Increased node pool max, requested quota increase, and right-sized over-provisioned CPU requests that were reserving 3x actual usage. Added regression test to prevent recurrence.",
+    "category": "Kubernetes",
+    "priority": "High",
+    "created_date": "2025-05-26",
+    "resolved_date": "2025-05-27"
+  },
+  {
+    "ticket_id": "TICK-257",
+    "title": "Read replica lag causing stale data",
+    "description": "Users see outdated account balances immediately after making changes. Read replica in us-east-1 showing replication lag of up to 45 seconds. Detected by synthetic monitoring.",
+    "resolution": "Heavy analytics queries were running on the same replica serving application reads, starving the replication apply thread. Moved analytics to a dedicated replica, routed read-after-write requests to primary, and added replica lag alerts at 5 seconds. Knowledge base article created for support team.",
+    "category": "Database",
+    "priority": "High",
+    "created_date": "2025-05-27",
+    "resolved_date": "2025-05-29"
+  },
+  {
+    "ticket_id": "TICK-258",
+    "title": "Database storage full in us-central1",
+    "description": "Managed database instance entered read-only mode. Application unable to write new records. Storage usage at 100%. First reported on the community forum.",
+    "resolution": "Transaction log growth from a stalled logical replication slot consumed all storage. Dropped the orphaned replication slot, enabled storage autoscaling, and added alerts for replication slot lag and free storage below 20%. Added regression test to prevent recurrence.",
+    "category": "Database",
+    "priority": "Critical",
+    "created_date": "2025-05-28",
+    "resolved_date": "2025-05-28"
+  },
+  {
+    "ticket_id": "TICK-259",
+    "title": "ImagePullBackOff in production cluster",
+    "description": "Deployments failing with ImagePullBackOff. Error shows 'unauthorized: authentication required' when pulling from private registry. First reported on the community forum.",
+    "resolution": "Registry pull secret expired after token rotation policy change. Switched to workload/managed identity based registry authentication (no static secret) and added alert for image pull failures. Added regression test to prevent recurrence.",
+    "category": "Kubernetes",
+    "priority": "Critical",
+    "created_date": "2025-05-31",
+    "resolved_date": "2025-06-01"
+  },
+  {
+    "ticket_id": "TICK-260",
+    "title": "CRM sync creating duplicate contacts",
+    "description": "Salesforce integration creating duplicate contact records nightly. First reported on the community forum.",
+    "resolution": "Matching used email exact-match, but email case differed between systems. Normalized emails to lowercase, used external ID field for upsert, and ran a one-time merge of duplicates. Postmortem published and action items tracked.",
+    "category": "Integration",
+    "priority": "Medium",
+    "created_date": "2025-06-02",
+    "resolved_date": "2025-06-03"
+  },
+  {
+    "ticket_id": "TICK-261",
+    "title": "Usage-based billing overcounting API calls",
+    "description": "Customers disputing bills showing API usage 2x higher than their own logs. Noticed during on-call shift handover.",
+    "resolution": "Retried requests at the load balancer were metered twice. Moved metering to application layer after request completion, deduplicated by request ID, and issued credits to affected accounts. Postmortem published and action items tracked.",
+    "category": "Billing",
+    "priority": "High",
+    "created_date": "2025-06-05",
+    "resolved_date": "2025-06-06"
+  },
+  {
+    "ticket_id": "TICK-262",
+    "title": "Connection storms after application restart",
+    "description": "Every deployment causes database CPU to spike to 100% for several minutes and login failures for users. Noticed during on-call shift handover.",
+    "resolution": "All 40 pods opened full connection pools simultaneously and warmed caches with heavy queries. Introduced a connection proxy (PgBouncer), staggered rollout with maxSurge limits, and lazy cache warming. Added regression test to prevent recurrence.",
+    "category": "Database",
+    "priority": "High",
+    "created_date": "2025-06-08",
+    "resolved_date": "2025-06-10"
+  },
+  {
+    "ticket_id": "TICK-263",
+    "title": "Timezone bug after daylight saving change",
+    "description": "Scheduled tasks ran one hour late after daylight saving transition; some ran twice. Reported by the support team via escalation.",
+    "resolution": "Schedules stored in local time without timezone info. Stored schedules in UTC with explicit IANA timezone, and handled DST gaps/overlaps explicitly in scheduler. Runbook updated with diagnosis and remediation steps.",
+    "category": "Configuration",
+    "priority": "Medium",
+    "created_date": "2025-06-11",
+    "resolved_date": "2025-06-14"
+  },
+  {
+    "ticket_id": "TICK-264",
+    "title": "ImagePullBackOff in production cluster",
+    "description": "Deployments failing with ImagePullBackOff. Error shows 'unauthorized: authentication required' when pulling from private registry.",
+    "resolution": "Registry pull secret expired after token rotation policy change. Switched to workload/managed identity based registry authentication (no static secret) and added alert for image pull failures. Postmortem published and action items tracked.",
+    "category": "Kubernetes",
+    "priority": "Critical",
+    "created_date": "2025-06-14",
+    "resolved_date": "2025-06-14"
+  },
+  {
+    "ticket_id": "TICK-265",
+    "title": "Availability zone outage took down service",
+    "description": "shipping-service unavailable for 40 minutes during a cloud provider zonal outage in eastus2. Detected by synthetic monitoring.",
+    "resolution": "All instances and the database were deployed in a single availability zone. Redesigned for multi-AZ with zone-redundant load balancer, database standby in another zone, and pod topology spread constraints. Added regression test to prevent recurrence.",
+    "category": "Cloud Infrastructure",
+    "priority": "Critical",
+    "created_date": "2025-06-17",
+    "resolved_date": "2025-06-17"
+  },
+  {
+    "ticket_id": "TICK-266",
+    "title": "Kafka consumer lag growing continuously",
+    "description": "Consumer group for user-service lagging by millions of messages. Downstream data hours behind. Noticed during on-call shift handover.",
+    "resolution": "Topic had 6 partitions limiting parallelism to 6 consumers, and consumers committed offsets synchronously per message. Increased partitions to 24, scaled consumers, and switched to batch processing with async commits. Shared learnings in engineering all-hands.",
+    "category": "Messaging",
+    "priority": "High",
+    "created_date": "2025-06-18",
+    "resolved_date": "2025-06-18"
+  },
+  {
+    "ticket_id": "TICK-267",
+    "title": "Duplicate charges on customer cards",
+    "description": "Several customers charged twice for a single order. Payment gateway dashboard shows two successful captures within seconds. First reported on the community forum.",
+    "resolution": "Webhook handler and synchronous checkout flow both triggered capture on authorization success. Made capture idempotent using gateway idempotency key and order state machine. Refunded affected customers.",
+    "category": "Payment",
+    "priority": "Critical",
+    "created_date": "2025-06-19",
+    "resolved_date": "2025-06-20"
+  },
+  {
+    "ticket_id": "TICK-268",
+    "title": "Dashboard numbers differ from source system",
+    "description": "Finance reports BI dashboard revenue 3% lower than ERP totals. Detected by synthetic monitoring.",
+    "resolution": "Dashboard filtered on order date in UTC while ERP used local business date, and excluded refunded-then-recharged orders. Aligned business date definition and documented metric definitions in a semantic layer. Shared learnings in engineering all-hands.",
+    "category": "Reporting",
+    "priority": "Medium",
+    "created_date": "2025-06-20",
+    "resolved_date": "2025-06-21"
+  },
+  {
+    "ticket_id": "TICK-269",
+    "title": "CRM sync creating duplicate contacts",
+    "description": "Salesforce integration creating duplicate contact records nightly. First reported on the community forum.",
+    "resolution": "Matching used email exact-match, but email case differed between systems. Normalized emails to lowercase, used external ID field for upsert, and ran a one-time merge of duplicates. Shared learnings in engineering all-hands.",
+    "category": "Integration",
+    "priority": "Medium",
+    "created_date": "2025-06-21",
+    "resolved_date": "2025-06-24"
+  },
+  {
+    "ticket_id": "TICK-270",
+    "title": "OAuth token refresh failing for notification-service clients",
+    "description": "Clients integrating with notification-service receive 401 Unauthorized roughly 60 minutes after login. Refresh token requests return 'invalid_grant'. Started after identity provider upgrade to v3.4.2. Raised by an enterprise customer through account manager.",
+    "resolution": "Refresh token rotation was enabled on the IdP, but clients were reusing the old refresh token. Updated client SDK to persist the newly issued refresh token on every refresh. Added grace period of 30 seconds for concurrent refresh requests. Knowledge base article created for support team.",
+    "category": "Authentication",
+    "priority": "High",
+    "created_date": "2025-06-23",
+    "resolved_date": "2025-06-23"
+  },
+  {
+    "ticket_id": "TICK-271",
+    "title": "Search relevance degraded after reindex",
+    "description": "Users complaining search results are less relevant; exact product names no longer ranked first. Flagged during weekly operations review.",
+    "resolution": "New index mapping removed keyword sub-field and custom analyzer. Restored mapping with keyword field boosting, and added search relevance regression tests with a golden query set.",
+    "category": "Search",
+    "priority": "Medium",
+    "created_date": "2025-06-24",
+    "resolved_date": "2025-06-26"
+  },
+  {
+    "ticket_id": "TICK-272",
+    "title": "Dashboard numbers differ from source system",
+    "description": "Finance reports BI dashboard revenue 3% lower than ERP totals. Noticed during on-call shift handover.",
+    "resolution": "Dashboard filtered on order date in UTC while ERP used local business date, and excluded refunded-then-recharged orders. Aligned business date definition and documented metric definitions in a semantic layer. Runbook updated with diagnosis and remediation steps.",
+    "category": "Reporting",
+    "priority": "Medium",
+    "created_date": "2025-06-26",
+    "resolved_date": "2025-06-27"
+  },
+  {
+    "ticket_id": "TICK-273",
+    "title": "SCIM provisioning creating duplicate users",
+    "description": "Users provisioned from identity provider appear twice in the application. First reported on the community forum.",
+    "resolution": "SCIM endpoint matched on userName case-sensitively while IdP changed casing. Implemented case-insensitive matching on externalId and userName, merged duplicates. Shared learnings in engineering all-hands.",
+    "category": "User Management",
+    "priority": "Medium",
+    "created_date": "2025-06-28",
+    "resolved_date": "2025-06-29"
+  },
+  {
+    "ticket_id": "TICK-274",
+    "title": "Flaky integration tests blocking releases",
+    "description": "About 30% of pipeline runs fail on integration tests that pass when re-run. Release velocity dropped. Noticed during on-call shift handover.",
+    "resolution": "Tests shared a database and depended on execution order and wall-clock time. Isolated test data per test run using containers, mocked time, and quarantined flaky tests with tracking dashboard. Knowledge base article created for support team.",
+    "category": "CI/CD",
+    "priority": "Medium",
+    "created_date": "2025-07-01",
+    "resolved_date": "2025-07-02"
+  },
+  {
+    "ticket_id": "TICK-275",
+    "title": "SCIM provisioning creating duplicate users",
+    "description": "Users provisioned from identity provider appear twice in the application. Detected by synthetic monitoring.",
+    "resolution": "SCIM endpoint matched on userName case-sensitively while IdP changed casing. Implemented case-insensitive matching on externalId and userName, merged duplicates. Shared learnings in engineering all-hands.",
+    "category": "User Management",
+    "priority": "Medium",
+    "created_date": "2025-07-02",
+    "resolved_date": "2025-07-05"
+  },
+  {
+    "ticket_id": "TICK-276",
+    "title": "Serverless function cold starts causing timeouts",
+    "description": "API endpoints backed by serverless functions intermittently take 8-10 seconds, exceeding client timeout. Detected by synthetic monitoring.",
+    "resolution": "Cold starts with large deployment package and VPC attachment. Reduced package size, enabled provisioned concurrency for latency-sensitive functions, and lazy-loaded SDK clients. Runbook updated with diagnosis and remediation steps.",
+    "category": "Serverless",
+    "priority": "High",
+    "created_date": "2025-07-03",
+    "resolved_date": "2025-07-03"
+  },
+  {
+    "ticket_id": "TICK-277",
+    "title": "Emails landing in spam for Gmail users",
+    "description": "Gmail users report transactional emails in spam folder after domain change. Detected by synthetic monitoring.",
+    "resolution": "New sending domain lacked DKIM alignment and had no DMARC policy. Configured DKIM signing for new domain, published DMARC, and registered with Gmail Postmaster tools to monitor reputation. Shared learnings in engineering all-hands.",
+    "category": "Email",
+    "priority": "High",
+    "created_date": "2025-07-06",
+    "resolved_date": "2025-07-07"
+  },
+  {
+    "ticket_id": "TICK-278",
+    "title": "Autoscaling group launching instances that fail health checks",
+    "description": "New instances in eastus2 terminated shortly after launch. Scaling activity loops continuously. Raised by an enterprise customer through account manager.",
+    "resolution": "Launch template referenced an AMI whose user-data script depended on a package repository that had moved. Pinned repository URL, baked dependencies into a golden image via image pipeline, and increased health check grace period. Knowledge base article created for support team.",
+    "category": "Cloud Infrastructure",
+    "priority": "High",
+    "created_date": "2025-07-08",
+    "resolved_date": "2025-07-10"
+  },
+  {
+    "ticket_id": "TICK-279",
+    "title": "LDAP sync dropping users from groups",
+    "description": "Users intermittently losing group memberships and therefore access to features. Nightly LDAP sync job logs show partial results with no errors. Raised by an enterprise customer through account manager.",
+    "resolution": "LDAP queries were hitting the directory server's 1000-entry page size limit without paging. Implemented paged results control (RFC 2696) in the sync job. Added reconciliation report comparing group counts before and after sync. Knowledge base article created for support team.",
+    "category": "Identity",
+    "priority": "High",
+    "created_date": "2025-07-11",
+    "resolved_date": "2025-07-13"
+  },
+  {
+    "ticket_id": "TICK-280",
+    "title": "Translations missing after release",
+    "description": "German and French users see English text in new settings page. Raised by an enterprise customer through account manager.",
+    "resolution": "New strings not extracted to translation files before release. Added string extraction to build, translation completeness check, and fallback logging for missing keys. Shared learnings in engineering all-hands.",
+    "category": "Localization",
+    "priority": "Low",
+    "created_date": "2025-07-12",
+    "resolved_date": "2025-07-19"
+  },
+  {
+    "ticket_id": "TICK-281",
+    "title": "VM backups failing silently",
+    "description": "Restore test revealed last successful VM backup was 23 days ago. Backup job dashboard showed green. Noticed during on-call shift handover.",
+    "resolution": "Backup agent failed after OS patch but job reported 'completed with warnings', which was treated as success. Updated agent, changed alerting to treat warnings as failures, and implemented monthly automated restore tests. Shared learnings in engineering all-hands.",
+    "category": "Backup & Recovery",
+    "priority": "Critical",
+    "created_date": "2025-07-15",
+    "resolved_date": "2025-07-15"
+  },
+  {
+    "ticket_id": "TICK-282",
+    "title": "Cloud quota limit blocking deployment",
+    "description": "Deployment to us-central1 failing with 'QuotaExceeded' for public IP addresses.",
+    "resolution": "Subscription hit regional public IP quota due to orphaned IPs from deleted VMs. Cleaned up unattached IPs, requested quota increase, and added a weekly orphaned resource cleanup automation. Added regression test to prevent recurrence.",
+    "category": "Cloud Infrastructure",
+    "priority": "Medium",
+    "created_date": "2025-07-18",
+    "resolved_date": "2025-07-21"
+  },
+  {
+    "ticket_id": "TICK-283",
+    "title": "Invoice totals off by one cent",
+    "description": "Customers reporting invoice totals that differ by $0.01 from line item sum. Finance reconciliation failing. Detected by synthetic monitoring.",
+    "resolution": "Tax was calculated per line item using floating-point arithmetic and rounded inconsistently. Switched to decimal arithmetic, defined rounding at invoice level per tax jurisdiction rules, and added reconciliation unit tests.",
+    "category": "Billing",
+    "priority": "Medium",
+    "created_date": "2025-07-21",
+    "resolved_date": "2025-07-24"
+  },
+  {
+    "ticket_id": "TICK-284",
+    "title": "Password reset links expired on arrival",
+    "description": "Users clicking password reset links immediately receive 'link expired' message. Reset email arrives within seconds of request.",
+    "resolution": "Corporate email security scanners were pre-fetching links, consuming the single-use token. Changed reset flow so the link opens a confirmation page and the token is consumed only on form submit. Added token reuse detection logging. Postmortem published and action items tracked.",
+    "category": "Authentication",
+    "priority": "High",
+    "created_date": "2025-07-24",
+    "resolved_date": "2025-07-24"
+  },
+  {
+    "ticket_id": "TICK-285",
+    "title": "API keys leaked in public repository",
+    "description": "Security scanner alerted that production API keys for checkout-service were committed to a public GitHub repository. Keys were exposed for approximately 6 hours. Flagged during weekly operations review.",
+    "resolution": "Revoked and rotated all exposed keys immediately. Reviewed access logs for misuse and found none. Moved secrets to a managed secrets vault, enabled push protection and secret scanning on all repositories, and added pre-commit hooks. Runbook updated with diagnosis and remediation steps.",
+    "category": "Security",
+    "priority": "Critical",
+    "created_date": "2025-07-25",
+    "resolved_date": "2025-07-25"
+  },
+  {
+    "ticket_id": "TICK-286",
+    "title": "SMS verification codes not delivered in some countries",
+    "description": "Users in certain countries never receive SMS one-time codes. Flagged during weekly operations review.",
+    "resolution": "SMS provider required sender ID registration for those countries. Registered sender IDs, added fallback provider routing, and offered voice call and authenticator app alternatives. Added regression test to prevent recurrence.",
+    "category": "Notifications",
+    "priority": "High",
+    "created_date": "2025-07-26",
+    "resolved_date": "2025-07-26"
+  },
+  {
+    "ticket_id": "TICK-287",
+    "title": "Subscription renewals not charged",
+    "description": "Monthly subscription renewals silently skipped for some customers. Customers retain access without payment. Billing job reports success. First reported on the community forum.",
+    "resolution": "Renewal job filtered on next_billing_date in UTC while dates were stored in local timezone, skipping customers near midnight boundaries. Normalized all billing dates to UTC and ran catch-up billing with customer notification.",
+    "category": "Billing",
+    "priority": "High",
+    "created_date": "2025-07-27",
+    "resolved_date": "2025-07-28"
+  },
+  {
+    "ticket_id": "TICK-288",
+    "title": "Currency conversion using stale exchange rates",
+    "description": "International customers charged amounts based on exchange rates from two weeks ago. Finance noticed margin discrepancies. Reported by the support team via escalation.",
+    "resolution": "Exchange rate fetch job failed silently after the provider rotated API credentials. Updated credentials in secrets vault, added staleness check that blocks checkout in affected currencies if rates are older than 24 hours, and alerting on job failure. Postmortem published and action items tracked.",
+    "category": "Payment",
+    "priority": "High",
+    "created_date": "2025-07-29",
+    "resolved_date": "2025-07-30"
+  },
+  {
+    "ticket_id": "TICK-289",
+    "title": "High CPU on notification-service after release v5.0",
+    "description": "CPU utilization jumped from 30% to 95% after deploying v5.0. Latency p99 increased from 200ms to 2.5s. Reported by the support team via escalation.",
+    "resolution": "Profiling showed a regex with catastrophic backtracking added in input validation. Rewrote the pattern to be linear, added regex timeout, and introduced performance benchmarks in CI for hot paths. Knowledge base article created for support team.",
+    "category": "Performance",
+    "priority": "Critical",
+    "created_date": "2025-07-30",
+    "resolved_date": "2025-07-30"
+  },
+  {
+    "ticket_id": "TICK-290",
+    "title": "Serverless function hitting concurrency limit",
+    "description": "Queue-triggered functions throttled; queue backlog growing to 200k messages. Flagged during weekly operations review.",
+    "resolution": "Account-level concurrency limit shared with another workload. Set reserved concurrency per function, requested limit increase, and configured batch size and max concurrency on event source mapping. Postmortem published and action items tracked.",
+    "category": "Serverless",
+    "priority": "High",
+    "created_date": "2025-08-02",
+    "resolved_date": "2025-08-02"
+  },
+  {
+    "ticket_id": "TICK-291",
+    "title": "SSL certificate expired on public website",
+    "description": "Customers seeing 'Your connection is not private' warnings. Certificate for main domain expired overnight. Flagged during weekly operations review.",
+    "resolution": "Certificate auto-renewal failed because DNS validation record was deleted during DNS cleanup. Renewed certificate, restored validation record, moved to managed certificates with auto-renewal, and added 30/14/7-day expiry alerts. Postmortem published and action items tracked.",
+    "category": "SSL/TLS",
+    "priority": "Critical",
+    "created_date": "2025-08-03",
+    "resolved_date": "2025-08-04"
+  },
+  {
+    "ticket_id": "TICK-292",
+    "title": "CORS errors blocking frontend API calls",
+    "description": "New frontend deployment on app subdomain failing all API calls with CORS errors in browser console. First reported on the community forum.",
+    "resolution": "API CORS allow-list did not include new subdomain, and preflight responses were cached by CDN without Vary: Origin. Updated allow-list via configuration, added Vary header, and purged CDN cache. Postmortem published and action items tracked.",
+    "category": "API",
+    "priority": "High",
+    "created_date": "2025-08-04",
+    "resolved_date": "2025-08-05"
+  },
+  {
+    "ticket_id": "TICK-293",
+    "title": "LDAP sync dropping users from groups",
+    "description": "Users intermittently losing group memberships and therefore access to features. Nightly LDAP sync job logs show partial results with no errors. Flagged during weekly operations review.",
+    "resolution": "LDAP queries were hitting the directory server's 1000-entry page size limit without paging. Implemented paged results control (RFC 2696) in the sync job. Added reconciliation report comparing group counts before and after sync. Knowledge base article created for support team.",
+    "category": "Identity",
+    "priority": "High",
+    "created_date": "2025-08-05",
+    "resolved_date": "2025-08-05"
+  },
+  {
+    "ticket_id": "TICK-294",
+    "title": "Android app crashes on devices with Android 14",
+    "description": "Crash rate jumped to 8% after Android 14 rollout. Crash logs show SecurityException for foreground service type. Reported by the support team via escalation.",
+    "resolution": "Android 14 requires declaring foregroundServiceType for foreground services. Added type declarations and required permissions to manifest, updated targetSdk, and released hotfix build via staged rollout. Knowledge base article created for support team.",
+    "category": "Mobile",
+    "priority": "Critical",
+    "created_date": "2025-08-06",
+    "resolved_date": "2025-08-06"
+  }
+]
